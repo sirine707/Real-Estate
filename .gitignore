@@ -74,3 +74,4 @@ out/
 # Do NOT ignore these important files
 !package-lock.json
 !yarn.lock
+README.md
