@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 
 const StructuredData = ({ type, data }) => {
   const location = useLocation();
-  const currentUrl = `https://buildestate.vercel.app${location.pathname}`;
+  const currentUrl = `https://EmiratEstate.vercel.app${location.pathname}`;
 
   // Different schema types based on page content
   const schemas = {
     website: {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'BuildEstate',
-      url: 'https://buildestate.vercel.app',
+      name: 'EmiratEstate',
+      url: 'https://EmiratEstate.vercel.app',
       potentialAction: {
         '@type': 'SearchAction',
         target: '{search_term_string}',
@@ -21,9 +21,9 @@ const StructuredData = ({ type, data }) => {
     organization: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'BuildEstate',
-      url: 'https://buildestate.vercel.app',
-      logo: 'https://buildestate.vercel.app/logo.png',
+      name: 'EmiratEstate',
+      url: 'https://EmiratEstate.vercel.app',
+      logo: 'https://EmiratEstate.vercel.app/logo.png',
       sameAs: [
         'https://github.com/AAYUSH412/Real-Estate-Website',
         'https://linkedin.com/in/AAYUSH412'
@@ -42,7 +42,7 @@ const StructuredData = ({ type, data }) => {
         addressRegion: data?.region || 'Region',
         addressCountry: 'IN'
       },
-      price: data?.price ? `₹${data.price}` : '',
+      price: data?.price ? `DH ${data.price}` : '',
       floorSize: {
         '@type': 'QuantitativeValue',
         unitText: 'SQFT',
@@ -54,10 +54,10 @@ const StructuredData = ({ type, data }) => {
     aiHub: {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'AI Property Hub',
+      name: 'Aqarat AI',
       applicationCategory: 'RealEstateApplication',
       description: 'AI-powered real estate analytics and recommendations tool',
-      url: 'https://buildestate.vercel.app/ai-property-hub',
+      url: 'https://EmiratEstate.vercel.app/ai-property-hub',
       offers: {
         '@type': 'Offer',
         price: '0',

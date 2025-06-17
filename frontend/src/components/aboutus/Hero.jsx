@@ -8,12 +8,12 @@ export default function Hero() {
         {/* Animated gradient background */}
         <div className="absolute inset-0 z-0">
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800"
+            className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-700 to-yellow-800"
             animate={{
               background: [
-                'linear-gradient(to bottom right, rgba(37, 99, 235, 1), rgba(79, 70, 229, 1), rgba(124, 58, 237, 0.8))',
-                'linear-gradient(to bottom right, rgba(79, 70, 229, 1), rgba(124, 58, 237, 0.8), rgba(37, 99, 235, 1))',
-                'linear-gradient(to bottom right, rgba(124, 58, 237, 0.8), rgba(37, 99, 235, 1), rgba(79, 70, 229, 1))'
+                'linear-gradient(to bottom right, rgba(249, 115, 22, 1), rgba(220, 38, 38, 1), rgba(202, 138, 4, 0.8))',
+                'linear-gradient(to bottom right, rgba(220, 38, 38, 1), rgba(202, 138, 4, 0.8), rgba(249, 115, 22, 1))',
+                'linear-gradient(to bottom right, rgba(202, 138, 4, 0.8), rgba(249, 115, 22, 1), rgba(220, 38, 38, 1))'
               ]
             }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -22,7 +22,7 @@ export default function Hero() {
           {/* Animated shapes */}
           <div className="absolute inset-0 opacity-20">
             <motion.div 
-              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-blue-300"
+              className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-orange-300"
               animate={{ 
                 x: [0, 30, 0, -30, 0],
                 y: [0, -30, 0, 30, 0],
@@ -32,7 +32,7 @@ export default function Hero() {
             />
             
             <motion.div 
-              className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-indigo-300"
+              className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-red-300"
               animate={{ 
                 x: [0, -40, 0, 40, 0],
                 y: [0, 40, 0, -40, 0],
@@ -42,7 +42,7 @@ export default function Hero() {
             />
             
             <motion.div 
-              className="absolute top-1/3 right-1/3 w-80 h-80 rounded-full bg-purple-300"
+              className="absolute top-1/3 right-1/3 w-80 h-80 rounded-full bg-yellow-300"
               animate={{ 
                 x: [0, 50, 0, -50, 0],
                 y: [0, -50, 0, 50, 0],

@@ -1,37 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, X, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SearchBar = ({ onSearch, className }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [recentSearches, setRecentSearches] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Popular locations suggestion
   const popularLocations = [
-   'Mumbai','Goa','Jaipur','Ahmedabad'
+    "Jumeirah",
+    "Downtown Dubai",
+    "Arabian Ranches 2",
+    "Palm Jumeirah",
+    "Dubai Marina",
+    "Business Bay",
   ];
-
-  useEffect(() => {
-    // Load recent searches from localStorage
-    const saved = localStorage.getItem('recentSearches');
-    if (saved) {
-      setRecentSearches(JSON.parse(saved));
-    }
-  }, []);
 
   const handleSearch = (query) => {
     if (!query.trim()) return;
 
-    // Update recent searches
-    const updatedSearches = [
-      query,
-      ...recentSearches.filter(item => item !== query)
-    ].slice(0, 5);
-
-    setRecentSearches(updatedSearches);
-    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
-    
     onSearch(query);
     setShowSuggestions(false);
   };
@@ -61,9 +48,10 @@ const SearchBar = ({ onSearch, className }) => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           onKeyDown={handleKeyDown}
-          className="w-full pl-12 pr-20 py-3 rounded-lg border border-gray-200 
-            focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+          className="w-full pl-12 pr-20 py-3 rounded-lg border border-gray-200 \
+            focus:border-amber-500 focus:ring-2 focus:ring-amber-300 \
             transition-all text-gray-800 placeholder-gray-400"
         />
         <Search 
@@ -87,8 +75,8 @@ const SearchBar = ({ onSearch, className }) => {
           )}
           <button 
             type="submit"
-            className="bg-blue-600 text-white px-4 py-1.5 rounded-lg 
-              hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="bg-orange-600 text-white px-4 py-1.5 rounded-lg \
+              hover:bg-orange-700 transition-colors flex items-center gap-2"
           >
             <Search className="h-4 w-4" />
             Search
@@ -106,29 +94,7 @@ const SearchBar = ({ onSearch, className }) => {
             className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg 
               shadow-lg border border-gray-100 overflow-hidden z-50"
           >
-            {recentSearches.length > 0 && (
-              <div className="p-2">
-                <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
-                  Recent Searches
-                </h3>
-                {recentSearches.map((query, index) => (
-                  <button
-                    key={`recent-${index}`}
-                    onClick={() => {
-                      setSearchQuery(query);
-                      handleSearch(query);
-                    }}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-50 
-                      rounded-md flex items-center gap-2 text-gray-700"
-                  >
-                    <Search className="h-4 w-4 text-gray-400" />
-                    {query}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div className="border-t border-gray-100 p-2">
+            <div className="p-2">
               <h3 className="text-xs font-medium text-gray-500 px-3 mb-2">
                 Popular Locations
               </h3>

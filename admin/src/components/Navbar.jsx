@@ -45,8 +45,8 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Home className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-orange-100 rounded-lg">
+              <Home className="h-5 w-5 text-orange-600" />
             </div>
             <span className="ml-2 text-xl font-bold text-gray-900">Admin Panel</span>
           </Link>
@@ -59,7 +59,7 @@ const Navbar = () => {
                 to={item.path}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.path)
-                    ? 'bg-blue-50 text-blue-700'
+                    ? 'bg-orange-50 text-orange-700'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -85,7 +85,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="text-gray-700 hover:text-orange-600 focus:outline-none"
             >
               {isMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -112,7 +112,7 @@ const Navbar = () => {
                 to={item.path}
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isActive(item.path)
-                    ? 'bg-blue-50 text-blue-700'
+                    ? 'bg-orange-50 text-orange-700'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
                 onClick={() => setIsMenuOpen(false)}

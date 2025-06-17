@@ -2,162 +2,270 @@ import FirecrawlApp from "@mendable/firecrawl-js";
 import { config } from '../config/config.js';
 
 class FirecrawlService {
-    constructor() {
-        this.firecrawl = new FirecrawlApp({
-            apiKey: config.firecrawlApiKey
-        });
+  constructor() {
+    this.firecrawl = new FirecrawlApp({
+      apiKey: config.firecrawlApiKey
+    });
+  }
+
+  // ✅ Map propertyType to Bayut URL format
+  _mapPropertyTypeToBayutUrl(propertyType) {
+    return propertyType.toLowerCase() === 'villa' ? 'villas' : 'apartments';
+  }
+
+  // ✅ Validate Bayut URL before scraping
+  async _validateBayutUrl(url) {
+    try {
+      const result = await this.firecrawl.scrapeUrl(url);
+      const html = result.data?.content || '';
+      // Check for known error content
+      if (html.includes("Oops! Sorry, This section is no longer available")) {
+        console.warn(`[FirecrawlService] Bayut URL is invalid: ${url}`);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error(`[FirecrawlService] Error validating URL ${url}:`, error.message);
+      return false;
     }
+  }
 
-    async findProperties(city, maxPrice, propertyCategory = "Residential", propertyType = "Flat", limit = 6) {
-        try {
-            const formattedLocation = city.toLowerCase().replace(/\s+/g, '-');
-            
-            // URLs for property websites (using 99acres as an example)
-            const urls = [
-                `https://www.99acres.com/property-in-${formattedLocation}-ffid/*`
-            ];
+  // ✅ Extract property listings from Bayut
+  async findProperties(city, maxPrice, propertyCategory = "Residential", propertyType = "Flat", limit = 6) {
+    try {
+      const formattedCity = city.toLowerCase().replace(/\s+/g, '-');
+      const emirate = "dubai";
+      const bayutPropertyType = this._mapPropertyTypeToBayutUrl(propertyType);
+      const searchUrl = `https://www.bayut.com/for-sale/property/${emirate}/${formattedCity}/`; 
 
-            const propertyTypePrompt = propertyType === "Flat" ? "Flats" : "Individual Houses";
-            
-            // Define schema directly as a JSON schema object
-            const propertySchema = {
-                type: "object",
-                properties: {
-                    properties: {
-                        type: "array",
-                        description: "List of property details",
-                        items: {
-                            type: "object",
-                            properties: {
-                                building_name: {
-                                    type: "string",
-                                    description: "Name of the building/property"
-                                },
-                                property_type: {
-                                    type: "string",
-                                    description: "Type of property (commercial, residential, etc)"
-                                },
-                                location_address: {
-                                    type: "string",
-                                    description: "Complete address of the property"
-                                },
-                                price: {
-                                    type: "string",
-                                    description: "Price of the property"
-                                },
-                                description: {
-                                    type: "string",
-                                    description: "Brief description of the property"
-                                },
-                                amenities: {
-                                    type: "array",
-                                    items: { type: "string" },
-                                    description: "List of key amenities"
-                                },
-                                area_sqft: {
-                                    type: "string",
-                                    description: "Area in square feet"
-                                }
-                            },
-                            required: ["building_name", "property_type", "location_address", "price"]
-                        }
-                    }
+      // ✅ Schema for property listings
+      const propertySchema = {
+        type: "object",
+        properties: {
+          properties: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                price: { 
+                  type: "string", 
+                  selector: ".dc381b54", 
+                  transform: "value => value.textContent.replace(/[^0-9.,]/g, '')"
                 },
-                required: ["properties"]
-            };
-            
-            const extractResult = await this.firecrawl.extract(
-                urls,
-                {
-                    prompt: `Extract ONLY ${limit} different ${propertyCategory} ${propertyTypePrompt} from ${city} that cost less than ${maxPrice} crores.
-                    
-                    Requirements:
-                    - Property Category: ${propertyCategory} properties only
-                    - Property Type: ${propertyTypePrompt} only
-                    - Location: ${city}
-                    - Maximum Price: ${maxPrice} crores
-                    - Include essential property details (building name, price, location, area)
-                    - Keep descriptions brief (under 100 words)
-                    - IMPORTANT: Return data for EXACTLY ${limit} different properties. No more.
-                    `,
-                    schema: propertySchema,
-                    enableWebSearch: true
-                }
-            );
-
-            if (!extractResult.success) {
-                throw new Error(`Failed to extract property data: ${extractResult.error || 'Unknown error'}`);
-            }
-
-            console.log('Extracted properties count:', extractResult.data.properties.length);
-
-            return extractResult.data;
-        } catch (error) {
-            console.error('Error finding properties:', error);
-            throw error;
-        }
-    }
-
-    async getLocationTrends(city, limit = 5) {
-        try {
-            const formattedLocation = city.toLowerCase().replace(/\s+/g, '-');
-            
-            // Define schema directly as a JSON schema object
-            const locationSchema = {
-                type: "object",
-                properties: {
-                    locations: {
-                        type: "array",
-                        description: "List of location data points",
-                        items: {
-                            type: "object",
-                            properties: {
-                                location: {
-                                    type: "string"
-                                },
-                                price_per_sqft: {
-                                    type: "number"
-                                },
-                                percent_increase: {
-                                    type: "number"
-                                },
-                                rental_yield: {
-                                    type: "number"
-                                }
-                            },
-                            required: ["location", "price_per_sqft", "percent_increase", "rental_yield"]
-                        }
-                    }
+                property_type: { 
+                  type: "string", 
+                  selector: "._19e94678.e0abc2de:nth-of-type(1)", 
+                  transform: "value => value.textContent.trim()"
                 },
-                required: ["locations"]
-            };
-            
-            const extractResult = await this.firecrawl.extract(
-                [`https://www.99acres.com/property-rates-and-price-trends-in-${formattedLocation}-prffid/*`],
-                {
-                    prompt: `Extract price trends data for ${limit} major localities in ${city}.
-                    IMPORTANT:
-                    - Return data for EXACTLY ${limit} different localities
-                    - Include data points: location name, price per square foot, yearly percent increase, and rental yield
-                    - Format as a list of locations with their respective data
-                    `,
-                    schema: locationSchema,
-                    enableWebSearch: true
+                beds: { 
+                  type: "string", 
+                  selector: "._19e94678.e0abc2de:nth-of-type(2)", 
+                  transform: "value => value.textContent.trim()"
+                },
+                baths: { 
+                  type: "string", 
+                  selector: "._19e94678.e0abc2de:nth-of-type(3)", 
+                  transform: "value => value.textContent.trim()"
+                },
+                area_sqft: { 
+                  type: "string", 
+                  selector: ".cfac7e1b._85ddb82f", 
+                  transform: "value => value.textContent.trim()"
+                },
+                title: { 
+                  type: "string", 
+                  selector: ".f0f13906" 
+                },
+                location_address: { 
+                  type: "string", 
+                  selector: "._4402bd70" 
+                },
+                agency_name: { 
+                  type: "string", 
+                  selector: ".a8593e2b[title]", 
+                  transform: "value => value.getAttribute('title')"
+                },
+                handover_date: { 
+                  type: "string", 
+                  selector: ".f1022a12._371e9918" 
+                },
+                payment_plan: { 
+                  type: "string", 
+                  selector: ".f1022a12._4b56adba" 
+                },
+                description: { 
+                  type: "string", 
+                  selector: "._9e0180f9" 
+                },
+                amenities: { 
+                  type: "array", 
+                  items: { type: "string" },
+                  selector: "._19e94678.e0abc2de" 
                 }
-            );
-
-            if (!extractResult.success) {
-                throw new Error(`Failed to extract location data: ${extractResult.error || 'Unknown error'}`);
+              },
+              required: ["price", "property_type", "beds", "baths", "area_sqft", "title", "location_address"]
             }
+          }
+        },
+        required: ["properties"]
+      };
 
-            console.log('Extracted locations count:', extractResult.data.locations.length);
-            
-            return extractResult.data;
-        } catch (error) {
-            console.error('Error fetching location trends:', error);
-            throw error;
+      // ✅ Firecrawl v1 API call
+      const extractResult = await this.firecrawl.extract({
+        url: searchUrl,
+        extractorOptions: {
+          mode: 'llm-extraction',
+          prompt: `Extract ONLY ${limit} properties in ${city}, UAE under AED ${maxPrice}M. Include price, type, bedrooms, bathrooms, area, title, location, and agency.`,
+          schema: propertySchema
         }
+      });
+
+      if (!extractResult?.success || !extractResult.data?.properties) {
+        console.error(`[FirecrawlService] Failed to extract properties for ${city}:`, extractResult.error || 'No properties found');
+        return { properties: [], message: extractResult.error || 'No properties found' };
+      }
+
+      // ✅ Filter by maxPrice (convert AED to number)
+      const filteredProperties = extractResult.data.properties
+        .filter(p => {
+          const priceValue = parseFloat(p.price.replace(/[^0-9.]/g, ''));
+          return priceValue <= maxPrice * 1e6;
+        })
+        .slice(0, limit);
+
+      return { properties: filteredProperties };
+    } catch (error) {
+      console.error(`[FirecrawlService] Error finding properties for ${city}:`, error.message);
+      return { properties: [], message: error.message };
     }
+  }
+
+  // ✅ Extract price trends from Bayut
+  async getCityPriceAnalysis(city, propertyType = "Flat") {
+    try {
+      const formattedCity = city.toLowerCase().replace(/\s+/g, '-');
+      const bayutPropertyType = this._mapPropertyTypeToBayutUrl(propertyType);
+      // ✅ Use Dubai as fallback
+      const trendsUrl = `https://www.bayut.com/index/sale-prices-${bayutPropertyType}-${formattedCity}.html`; 
+      const finalUrl = await this._validateBayutUrl(trendsUrl) ? trendsUrl : `https://www.bayut.com/index/sale-prices-${bayutPropertyType}-dubai.html`; 
+
+      // ✅ Schema for price trends
+      const priceTrendSchema = {
+        type: "object",
+        properties: {
+          location_name: { 
+            type: "string", 
+            selector: "h3._4402bd70", 
+            transform: "value => value.textContent.trim()"
+          },
+          current_price_per_sqft: { 
+            type: "string", 
+            selector: ".price-class", 
+            transform: "value => value.textContent.replace(/[^0-9.]/g, '')"
+          },
+          historical_prices: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                month_year: { 
+                  type: "string", 
+                  selector: "li.left:nth-child(1)",
+                  transform: "value => value.textContent.trim()"
+                },
+                price_per_sqft_table: { 
+                  type: "string", 
+                  selector: "li.left:nth-child(3)",
+                  transform: "value => value.textContent.replace(/[^0-9.]/g, '')"
+                },
+                percentage_change: { 
+                  type: "string", 
+                  selector: "li.left.inc, li.left.dec", 
+                  transform: "value => value.textContent.trim()" 
+                }
+              }
+            },
+            selector: ".toogling-section li:not(.col-name)"
+          },
+          price_change_direction: { 
+            type: "string", 
+            selector: ".price.ltr",
+            transform: "value => value.classList.contains('dec') ? 'down' : 'up'"
+          },
+          price_change_value: { 
+            type: "string", 
+            selector: ".price_value",
+            transform: "value => value.textContent.trim()"
+          },
+          price_change_percentage_summary: { 
+            type: "string", 
+            selector: ".unit",
+            transform: "value => value.textContent.trim()"
+          },
+          price_change_period: { 
+            type: "string", 
+            selector: ".sub-title",
+            transform: "value => value.textContent.match(/$.*$/)?.[0] || 'N/A'"
+          }
+        },
+        required: ["location_name", "current_price_per_sqft", "historical_prices", "price_change_direction"]
+      };
+
+      // ✅ Firecrawl v1 API call
+      const extractResult = await this.firecrawl.extract({
+        url: finalUrl,
+        extractorOptions: {
+          mode: 'llm-extraction',
+          prompt: `Extract price trends for '${city}' from Bayut. Ensure "location_name" matches '${city}' exactly. Focus on:\n- Current price per sqft\n- Historical price data (month/year, price/sqft, % change)\n- Price change summary (period, value, direction)`,
+          schema: priceTrendSchema
+        }
+      });
+
+      if (!extractResult?.success || !extractResult.data) {
+        console.error(`[FirecrawlService] Failed to extract price trends for ${city}:`, extractResult.error || 'No data found');
+        return { 
+          success: false, 
+          message: `Failed to extract price trends for ${city}`, 
+          detailedPriceTrend: null 
+        };
+      }
+
+      // ✅ Validate location matches input
+      const extractedLocation = extractResult.data.location_name || '';
+      const expectedLocation = city.trim().toLowerCase();
+
+      if (!extractedLocation.toLowerCase().includes(expectedLocation)) {
+        console.warn(`[FirecrawlService] Extracted location "${extractedLocation}" does not match expected "${city}"`);
+        return {
+          success: false,
+          message: `Data mismatch: Extracted price trends for "${extractedLocation}" instead of "${city}"`,
+          detailedPriceTrend: null
+        };
+      }
+
+      return {
+        success: true,
+        detailedPriceTrend: extractResult.data
+      };
+    } catch (error) {
+      console.error(`[FirecrawlService] Error in getCityPriceAnalysis for ${city}:`, error.message);
+      // ✅ Diagnostic scrape for 400 errors
+      if (error.statusCode === 500 && error.details?.[0]?.code === 'unrecognized_keys') {
+        console.warn(`[FirecrawlService] Diagnostic scrape for ${finalUrl}`);
+        try {
+          const diagnosticScrape = await this.firecrawl.scrapeUrl(finalUrl);
+          console.log(`[FirecrawlService] Diagnostic scrape result for ${finalUrl}:`, diagnosticScrape);
+        } catch (scrapeError) {
+          console.error(`[FirecrawlService] Diagnostic scrape failed for ${finalUrl}:`, scrapeError.message);
+        }
+      }
+      return {
+        success: false,
+        message: error.message,
+        detailedPriceTrend: null
+      };
+    }
+  }
 }
 
 export default new FirecrawlService();

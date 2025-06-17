@@ -149,7 +149,7 @@ const PropertyDetails = () => {
                 {/* Left Column */}
                 <div className="space-y-6">
                   {/* Price Box */}
-                  <div className="h-28 bg-blue-50/50 rounded-lg animate-pulse"></div>
+                  <div className="h-28 bg-orange-50/50 rounded-lg animate-pulse"></div>
                   
                   {/* Features Grid */}
                   <div className="grid grid-cols-3 gap-4">
@@ -165,7 +165,7 @@ const PropertyDetails = () => {
                   </div>
                   
                   {/* Button */}
-                  <div className="h-12 bg-blue-200 rounded-lg animate-pulse"></div>
+                  <div className="h-12 bg-orange-200 rounded-lg animate-pulse"></div>
                 </div>
                 
                 {/* Right Column */}
@@ -194,7 +194,7 @@ const PropertyDetails = () => {
           </div>
           
           {/* Map Location Skeleton */}
-          <div className="mt-8 p-6 bg-blue-50/50 rounded-xl animate-pulse">
+          <div className="mt-8 p-6 bg-orange-50/50 rounded-xl animate-pulse">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-5 h-5 bg-gray-300 rounded-full"></div>
               <div className="h-7 bg-gray-300 rounded-lg w-1/6"></div>
@@ -214,7 +214,7 @@ const PropertyDetails = () => {
           <p className="text-red-500 mb-4">{error}</p>
           <Link
             to="/properties"
-            className="text-blue-600 hover:underline flex items-center justify-center"
+            className="text-orange-600 hover:underline flex items-center justify-center"
           >
             <ArrowLeft className="w-4 h-4 mr-1" /> Back to Properties
           </Link>
@@ -234,7 +234,7 @@ const PropertyDetails = () => {
         <nav className="flex items-center justify-between mb-8">
           <Link
             to="/properties"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700"
+            className="inline-flex items-center text-orange-600 hover:text-orange-700"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Properties
           </Link>
@@ -325,9 +325,9 @@ const PropertyDetails = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <div className="bg-blue-50 rounded-lg p-6 mb-6">
-                  <p className="text-3xl font-bold text-blue-600 mb-2">
-                    ₹{Number(property.price).toLocaleString('en-IN')}
+                <div className="bg-orange-50 rounded-lg p-6 mb-6">
+                  <p className="text-3xl font-bold text-orange-600 mb-2">
+                    DH {Number(property.price).toLocaleString('en-IN')}
                   </p>
                   <p className="text-gray-600">
                     Available for {property.availability}
@@ -336,19 +336,19 @@ const PropertyDetails = () => {
 
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="bg-gray-50 p-4 rounded-lg text-center">
-                    <BedDouble className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                    <BedDouble className="w-6 h-6 text-orange-600 mx-auto mb-2" />
                     <p className="text-sm text-gray-600">
                       {property.beds} {property.beds > 1 ? 'Beds' : 'Bed'}
                     </p>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg text-center">
-                    <Bath className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                    <Bath className="w-6 h-6 text-orange-600 mx-auto mb-2" />
                     <p className="text-sm text-gray-600">
                       {property.baths} {property.baths > 1 ? 'Baths' : 'Bath'}
                     </p>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg text-center">
-                    <Maximize className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                    <Maximize className="w-6 h-6 text-orange-600 mx-auto mb-2" />
                     <p className="text-sm text-gray-600">{property.sqft} sqft</p>
                   </div>
                 </div>
@@ -363,8 +363,8 @@ const PropertyDetails = () => {
 
                 <button
                   onClick={() => setShowSchedule(true)}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg 
-                    hover:bg-blue-700 transition-colors flex items-center 
+                  className="w-full bg-orange-600 text-white py-3 rounded-lg 
+                    hover:bg-orange-700 transition-colors flex items-center 
                     justify-center gap-2"
                 >
                   <Calendar className="w-5 h-5" />
@@ -388,7 +388,7 @@ const PropertyDetails = () => {
                         key={index}
                         className="flex items-center text-gray-600"
                       >
-                        <Building className="w-4 h-4 mr-2 text-blue-600" />
+                        <Building className="w-4 h-4 mr-2 text-orange-600" />
                         {amenity}
                       </div>
                     ))}
@@ -400,8 +400,8 @@ const PropertyDetails = () => {
         </div>
 
         {/* Add Map Location */}
-        <div className="mt-8 p-6 bg-blue-50 rounded-xl">
-          <div className="flex items-center gap-2 text-blue-600 mb-4">
+        <div className="mt-8 p-6 bg-orange-50 rounded-xl">
+          <div className="flex items-center gap-2 text-orange-600 mb-4">
             <Compass className="w-5 h-5" />
             <h3 className="text-lg font-semibold">Location</h3>
           </div>
@@ -412,7 +412,7 @@ const PropertyDetails = () => {
             href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700"
+            className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700"
           >
             <MapPin className="w-4 h-4" />
             View on Google Maps

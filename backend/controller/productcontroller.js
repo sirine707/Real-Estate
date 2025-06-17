@@ -1,6 +1,7 @@
 import fs from "fs";
 import imagekit from "../config/imagekit.js";
 import Property from "../models/propertymodel.js";
+import mongoose from "mongoose"; // Added mongoose import
 
 const addproperty = async (req, res) => {
     try {
@@ -151,6 +152,12 @@ const updateproperty = async (req, res) => {
 const singleproperty = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid property ID format", success: false });
+        }
+
         const property = await Property.findById(id);
         if (!property) {
             return res.status(404).json({ message: "Property not found", success: false });
@@ -158,6 +165,10 @@ const singleproperty = async (req, res) => {
         res.json({ property, success: true });
     } catch (error) {
         console.log("Error fetching property:", error);
+        // Check if the error is a CastError and customize the message
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: `Invalid property ID format: ${error.value} is not a valid ObjectId.`, success: false });
+        }
         res.status(500).json({ message: "Server Error", success: false });
     }
 };

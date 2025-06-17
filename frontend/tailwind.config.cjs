@@ -11,19 +11,18 @@ module.exports = {
       },
       animation: {
         'bg-pos-x': 'bg-pos-x 3s ease infinite',
+        'float': 'float 3s ease-in-out infinite', // Added float animation
       },
       keyframes: {
         'bg-pos-x': {
           '0%, 100%': { 'background-position': '0% 50%' },
           '50%': { 'background-position': '100% 50%' },
         },
+        'float': { // Added float keyframes
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
       },
-    },
-  },
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "class",
-  theme: {
-    extend: {
       colors: {
         primary: {
           50: "#eff6ff",
@@ -77,4 +76,6 @@ module.exports = {
       ],
     },
   },
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: "class",
 };

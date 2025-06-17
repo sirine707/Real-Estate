@@ -14,7 +14,6 @@ import {
   Sparkles,
   BotMessageSquare,
 } from "lucide-react";
-import logo from "../assets/home-regular-24.png";
 import { useAuth } from "../context/AuthContext";
 import PropTypes from "prop-types";
 
@@ -82,8 +81,8 @@ const Navbar = () => {
       transition={{ duration: 0.3 }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 shadow-md backdrop-blur-lg"
-          : "bg-white/80 backdrop-blur-md border-b border-gray-200"
+          ? "bg-white/90 backdrop-blur-2xl shadow-lg" // Updated for even more blur
+          : "bg-white border-b border-gray-200"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,10 +94,10 @@ const Navbar = () => {
               transition={{ duration: 0.5 }}
               className="p-2 rounded-lg"
             >
-              <img src={logo} alt="BuildEstate logo" className="w-6 h-6" />
+              <Building className="w-6 h-6 text-orange-500" />
             </motion.div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent group-hover:from-indigo-600 group-hover:to-blue-600 transition-all duration-300">
-              BuildEstate
+            <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent group-hover:from-orange-500 group-hover:to-red-600 transition-all duration-300">
+              EmiratEstate
             </span>
           </Link>
 
@@ -118,7 +117,7 @@ const Navbar = () => {
                     aria-expanded={isDropdownOpen}
                   >
                     <div className="relative">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-medium text-sm shadow-md hover:shadow-lg transition-shadow">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center text-white font-medium text-sm shadow-md hover:shadow-lg transition-shadow">
                         {getInitials(user?.name)}
                       </div>
                       <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
@@ -165,7 +164,7 @@ const Navbar = () => {
                 <div className="flex items-center space-x-4">
                   <Link
                     to="/login"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                    className="text-gray-700 hover:text-orange-600 font-medium transition-colors"
                   >
                     Sign in
                   </Link>
@@ -175,7 +174,7 @@ const Navbar = () => {
                   >
                     <Link
                       to="/signup"
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                      className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-5 py-2 rounded-lg hover:from-orange-500 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
                     >
                       Get started
                     </Link>
@@ -228,105 +227,65 @@ const Navbar = () => {
   );
 };
 
-const NavLinks = ({ currentPath }) => {
-  // Enhanced NavLinks with special highlight for AI Property Hub
-  const navLinks = [
-    { name: "Home", path: "/", icon: Home },
-    { name: "Properties", path: "/properties", icon: Search },
-    // AI Property Hub is now handled separately
-    { name: "About Us", path: "/about", icon: Users },
-    { name: "Contact", path: "/contact", icon: MessageCircle },
-  ];
-
-  // Special animation for sparkles
-  const [sparkleKey, setSparkleKey] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSparkleKey((prev) => prev + 1);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const isAIHubActive = currentPath.startsWith("/ai-property-hub");
-
+const NavLink = ({ to, children, icon, currentPath }) => {
+  const isActive = currentPath === to;
   return (
-    <div className="flex space-x-6 items-center">
-      {navLinks.map(({ name, path, icon: Icon }) => {
-        const isActive =
-          path === "/" ? currentPath === path : currentPath.startsWith(path);
-
-        return (
-          <Link
-            key={name}
-            to={path}
-            className={`relative font-medium transition-colors duration-200 flex items-center gap-1.5 px-2 py-1 rounded-md
-              ${
-                isActive
-                  ? "text-blue-600 bg-blue-50"
-                  : "text-gray-700 hover:text-blue-600 hover:bg-blue-50/50"
-              }
-            `}
-          >
-            <Icon className="w-4 h-4" />
-            <span>{name}</span>
-            {isActive && (
-              <motion.div
-                layoutId="activeIndicator"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"
-                initial={false}
-              />
-            )}
-          </Link>
-        );
-      })}
-
-      {/* Enhanced AI Property Hub Link */}
-      <Link
-        to="/ai-property-hub"
-        className={`relative font-medium transition-all duration-300 flex items-center gap-2 px-3 py-1.5 rounded-md ${
-          isAIHubActive
-            ? "text-white bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 shadow-md shadow-purple-500/30"
-            : "text-indigo-700 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-600 hover:via-purple-500 hover:to-pink-500 hover:text-white"
-        }`}
-      >
-        <div className="relative">
-          <BotMessageSquare
-            className={`w-5 h-5 ${
-              isAIHubActive ? "text-white" : "text-indigo-600"
-            }`}
-          />
-          <motion.div
-            key={sparkleKey}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="absolute -top-1 -right-1"
-          >
-            <Sparkles className="w-3 h-3 text-yellow-400" />
-          </motion.div>
-        </div>
-        <span className="font-semibold">AI Property Hub</span>
-        {isAIHubActive ? (
-          <motion.div
-            layoutId="aiActiveIndicator"
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full"
-            initial={false}
-          />
-        ) : (
-          <motion.span
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-full text-[10px] font-bold"
-          >
-            NEW
-          </motion.span>
-        )}
-      </Link>
-    </div>
+    <Link
+      to={to}
+      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 font-medium text-base ${
+        isActive
+          ? "bg-orange-100 text-orange-600 shadow-inner"
+          : "text-gray-700 hover:bg-gray-100 hover:text-orange-600"
+      }`}
+    >
+      {icon}
+      <span>{children}</span>
+    </Link>
   );
 };
+
+NavLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  icon: PropTypes.element.isRequired,
+  currentPath: PropTypes.string.isRequired,
+};
+
+const NavLinks = ({ currentPath }) => (
+  <div className="flex items-center space-x-1">
+    <NavLink to="/" icon={<Home className="w-4 h-4" />} currentPath={currentPath}>
+      Home
+    </NavLink>
+    <NavLink
+      to="/properties"
+      icon={<Search className="w-4 h-4" />}
+      currentPath={currentPath}
+    >
+      Properties
+    </NavLink>
+    <NavLink
+      to="/ai-property-hub"
+      icon={<BotMessageSquare className="w-4 h-4" />}
+      currentPath={currentPath}
+    >
+      Aqarat AI
+    </NavLink>
+    <NavLink
+      to="/about"
+      icon={<Users className="w-4 h-4" />}
+      currentPath={currentPath}
+    >
+      About Us
+    </NavLink>
+    <NavLink
+      to="/contact"
+      icon={<MessageCircle className="w-4 h-4" />}
+      currentPath={currentPath}
+    >
+      Contact
+    </NavLink>
+  </div>
+);
 
 const MobileNavLinks = ({
   setMobileMenuOpen,
@@ -347,7 +306,7 @@ const MobileNavLinks = ({
 
   return (
     <div className="flex flex-col space-y-1 pb-3">
-      {/* Enhanced AI Property Hub for Mobile */}
+      {/* Enhanced Aqarat AI for Mobile */}
       <div className="px-3 py-2">
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
           <Link
@@ -355,12 +314,12 @@ const MobileNavLinks = ({
             onClick={() => setMobileMenuOpen(false)}
             className={`relative flex items-center gap-3 px-4 py-3.5 rounded-lg shadow-sm transition-all ${
               isAIHubActive
-                ? "bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 text-white shadow-md shadow-purple-500/20"
-                : "bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border border-indigo-100"
+                ? "bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-md shadow-orange-500/20"
+                : "bg-gradient-to-r from-yellow-50 to-orange-50 text-orange-700 border border-orange-100"
             }`}
           >
             <div className="relative">
-              <BotMessageSquare className="w-5 h-5" />
+              <BotMessageSquare className={`w-5 h-5 ${isAIHubActive ? 'text-white' : 'text-orange-700'}`} />
               <motion.div
                 animate={{ rotate: [0, 15, -15, 0] }}
                 transition={{
@@ -374,10 +333,10 @@ const MobileNavLinks = ({
               </motion.div>
             </div>
             <div className="flex-1">
-              <div className="font-medium text-base">AI Property Hub</div>
+              <div className="font-medium text-lg">Aqarat AI</div> {/* Increased font size for Aqarat AI mobile link */}
               <div
-                className={`text-xs ${
-                  isAIHubActive ? "text-indigo-100" : "text-indigo-500"
+                className={`text-sm ${
+                  isAIHubActive ? "text-yellow-100" : "text-orange-500"
                 }`}
               >
                 Smart property recommendations
@@ -408,14 +367,14 @@ const MobileNavLinks = ({
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
                 ${
                   isActive
-                    ? "bg-blue-50 text-blue-600 font-medium"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+                    ? "bg-orange-50 text-orange-600 font-medium"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-orange-600"
                 }
               `}
               onClick={() => setMobileMenuOpen(false)}
             >
               <Icon className="w-5 h-5" />
-              {name}
+              <span className="text-base">{name}</span> {/* Increased font size for other mobile nav links */}
             </Link>
           </motion.div>
         );
@@ -426,7 +385,7 @@ const MobileNavLinks = ({
         {isLoggedIn ? (
           <div className="space-y-3 px-3">
             <div className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-medium text-sm shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center text-white font-medium text-sm shadow-sm">
                 {user?.name ? user.name[0].toUpperCase() : "U"}
               </div>
               <div className="flex-1">
@@ -454,7 +413,7 @@ const MobileNavLinks = ({
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all font-medium"
+                className="w-full flex items-center justify-center px-4 py-3 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all font-medium hover:text-orange-600 text-base"
               >
                 Sign in
               </Link>
@@ -463,7 +422,7 @@ const MobileNavLinks = ({
               <Link
                 to="/signup"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all font-medium shadow-md shadow-blue-500/20"
+                className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white rounded-lg hover:from-orange-500 hover:to-red-600 transition-all font-medium shadow-md shadow-orange-500/20 text-base"
               >
                 Create account
               </Link>

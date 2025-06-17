@@ -1,38 +1,22 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { features } from "../assets/featuredata";
+import Agent1 from "../assets/images/agent1.jpg";
+import Agent2 from "../assets/images/agent2.jpg";
+import Agent3 from "../assets/images/agent3.png";
+import Agent4 from "../assets/images/agent4.png";
 
-// Enhanced animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.3,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 60,
-      damping: 12
-    }
-  },
-};
+const agents = [
+  { id: 1, name: "Ahmed", image: Agent1, title: "Senior Consultant" },
+  { id: 2, name: "Tiffany", image: Agent2, title: "Property Specialist" },
+  { id: 3, name: "Lorren", image: Agent3, title: "Client Advisor" },
+  { id: 6, name: "Rebecca", image: Agent4, title: "Agent" },
+];
 
 const Features = () => {
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header Updated to match other sections */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -40,74 +24,70 @@ const Features = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <span className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-medium tracking-wide uppercase">Our Strengths</span>
-          <h2 className="text-4xl font-bold text-gray-900 mt-4 mb-4">Why Choose Us</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto mb-6 rounded-full"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            We're committed to providing exceptional service and finding the
-            perfect home for you with our innovative approach
-          </p>
+          {/* Subtitle */}
+          <div className="text-sm font-semibold text-orange-600 uppercase tracking-wider">
+            Personalized Guidance
+          </div>
+          {/* Main Title: "Proven Expertise" */}
+          <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-800">
+            Proven Expertise
+          </h2>
+          {/* Decorative Line */}
+          <div className="mt-4 w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto"></div>
         </motion.div>
 
-        {/* Features Grid */}
+        {/* Agent Display Section - Changed from Carousel */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-xl border border-gray-50 transition-all duration-300"
-              variants={cardVariants}
-              whileHover={{ 
-                y: -10,
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)"
-              }}
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl flex items-center justify-center mb-6 transform transition-transform duration-300 group-hover:rotate-6">
-                <feature.icon className="h-8 w-8 text-blue-600" />
-              </div>
-              
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                {feature.title}
-              </h3>
-              
-              <p className="text-gray-600 leading-relaxed mb-6">
-                {feature.description}
-              </p>
-              
-              <motion.a 
-                href="#" 
-                className="inline-flex items-center text-blue-600 text-sm font-medium hover:text-blue-800 transition-colors"
-                whileHover={{ x: 5 }}
-              >
-                Learn more <ArrowRight className="ml-2 h-4 w-4" />
-              </motion.a>
-            </motion.div>
-          ))}
-        </motion.div>
-        
-        {/* Call to action */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 50 }} // Adjusted initial animation slightly
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="flex justify-center mt-16"
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mt-12 w-full max-w-6xl mx-auto" // Removed flex flex-col items-center
         >
-          <motion.a
-            href="/properties"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all shadow-blue-500/30 flex items-center"
-          >
-            Browse Our Properties
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </motion.a>
+          {/* Grid layout for agents */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            {agents.map((agent, index) => (
+              // Card: Adjusted for grid layout, set a fixed height, added flip animation
+              <motion.div
+                key={agent.id}
+                className="h-[450px] rounded-xl shadow-lg overflow-hidden group relative"
+                style={{ perspective: '1000px' }} // For 3D effect
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }} // Trigger once, when 30% is visible
+                variants={{
+                  hidden: { rotateY: 180, opacity: 0, scale: 0.9 },
+                  visible: {
+                    rotateY: 0,
+                    opacity: 1,
+                    scale: 1,
+                    transition: {
+                      duration: 0.6,
+                      ease: "easeOut",
+                      delay: index * 0.15 // Stagger animation
+                    }
+                  }
+                }}
+              >
+                {/* Image: now fills the card, absolutely positioned */}
+                <img
+                  src={agent.image}
+                  alt={agent.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                />
+                {/* Scrim: for text readability over the image */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent pointer-events-none"></div>
+                
+                {/* Content: overlaid at the bottom, text white/light gray for contrast */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-left z-10"> 
+                  <h3 className="text-xl font-bold text-white mb-1">{agent.name}</h3> 
+                  <p className="text-sm text-gray-200">{agent.title}</p> 
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
+        {/* Removed Navigation Buttons and Dots Indicator */}
       </div>
     </section>
   );

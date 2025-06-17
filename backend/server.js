@@ -44,7 +44,7 @@ app.use(cors({
     'http://localhost:4000',
     'http://localhost:5174',
     'http://localhost:5173',
-    'https://buildestate.vercel.app',
+    'https://EmiratEstate.vercel.app',
     'https://real-estate-website-admin.onrender.com',
     'https://real-estate-website-backend-zfu7.onrender.com',
   ],
@@ -104,7 +104,7 @@ app.get("/", (req, res) => {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BuildEstate API Status</title>
+        <title>EmiratEstate API Status</title>
         <style>
           body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
           .container { background: #f9fafb; border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -116,17 +116,17 @@ app.get("/", (req, res) => {
       </head>
       <body>
         <div class="container">
-          <h1>BuildEstate API</h1>
+          <h1>EmiratEstate API</h1>
           <p>Status: <span class="status">Online</span></p>
           <p>Server Time: ${new Date().toLocaleString()}</p>
           
           <div class="info">
-            <p>The BuildEstate API is running properly. This backend serves property listings, user authentication, 
-            and AI analysis features for the BuildEstate property platform.</p>
+            <p>The EmiratEstate API is running properly. This backend serves property listings, user authentication, 
+            and AI analysis features for the EmiratEstate property platform.</p>
           </div>
           
           <div class="footer">
-            <p>© ${new Date().getFullYear()} BuildEstate. All rights reserved.</p>
+            <p>© ${new Date().getFullYear()} EmiratEstate. All rights reserved.</p>
           </div>
         </div>
       </body>

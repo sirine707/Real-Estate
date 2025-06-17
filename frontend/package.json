@@ -1,10 +1,10 @@
 {
-  "name": "buildestate-frontend",
+  "name": "EmiratEstate-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "main": "App.jsx",
-  "description": "BuildEstate - Premium Real Estate Platform User Interface",
+  "description": "EmiratEstate - Discover Real state from your own EaseReal Estate Platform User Interface",
   "author": "Aayush Vaghela",
   "license": "MIT",
   "repository": {
@@ -42,9 +42,11 @@
     "react-markdown": "^10.1.0",
     "react-router": "^7.1.1",
     "react-router-dom": "^7.1.5",
+    "react-slick": "^0.30.3",
     "react-text-gradients": "^1.0.2",
     "react-toastify": "^11.0.3",
     "remark-gfm": "^4.0.1",
+    "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },

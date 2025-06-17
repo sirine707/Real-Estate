@@ -82,7 +82,7 @@ function ContactForm() {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+          className="w-full bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center"
         >
           <Send className="w-4 h-4 mr-2" />
           Send Message

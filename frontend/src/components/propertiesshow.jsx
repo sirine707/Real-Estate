@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { 
   MapPin, 
-  IndianRupee, 
   BedDouble, 
   Bath, 
   Maximize, 
   Heart,
   Eye,
   ArrowRight,
+  ArrowLeft, // Added ArrowLeft
   Building,
   Search
 } from 'lucide-react';
@@ -22,7 +22,7 @@ const sampleProperties = [
   {
     _id: "sample1",
     title: "Luxury Beachfront Villa",
-    location: "Juhu Beach, Mumbai",
+    location: "Palm Jumeirah, Dubai", // Updated location
     price: 25000000,
     beds: 4,
     baths: 3,
@@ -34,7 +34,7 @@ const sampleProperties = [
   {
     _id: "sample2",
     title: "Modern Highrise Apartment",
-    location: "Bandra West, Mumbai",
+    location: "Downtown Dubai", // Updated location
     price: 18500000,
     beds: 3,
     baths: 2,
@@ -45,136 +45,87 @@ const sampleProperties = [
   },
   {
     _id: "sample3",
-    title: "Riverside Townhouse",
-    location: "Koramangala, Bangalore",
+    title: "Elegant Marina Townhouse", // Updated title
+    location: "Dubai Marina", // Updated location
     price: 12000000,
     beds: 3,
-    baths: 2.5,
+    baths: 3, // Updated baths from 2.5 to 3
     sqft: 2200,
     type: "House",
     availability: "Buy",
-    image: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"]
+    image: ["https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"] // New image URL
   }
 ];
 
 const PropertyCard = ({ property }) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  // Removed isFavorite state as the button was removed
 
   const handleNavigate = () => {
     navigate(`/properties/single/${property._id}`);
   };
 
-  const toggleFavorite = (e) => {
-    e.stopPropagation();
-    setIsFavorite(!isFavorite);
-    // Here you would typically call an API to save to user's favorites
-  };
+  // Removed toggleFavorite function
 
   return (
     <motion.div
       whileHover={{ y: -8 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer w-full flex flex-col"
       onClick={handleNavigate}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Property Image */}
-      <div className="relative h-64">
+      <div className="relative h-60 md:h-72 w-full rounded-t-xl overflow-hidden"> {/* Added rounded-t-xl and overflow-hidden */}
         <img
           src={property.image[0]}
           alt={property.title}
           className="w-full h-full object-cover"
         />
         
-        {/* Property badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-          <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-md">
-            {property.type}
-          </span>
-          <span className={`text-xs font-medium px-3 py-1.5 rounded-full shadow-md 
+        {/* Property badges - For Sale / For Rent */}
+        <div className="absolute top-3 left-3">
+          <span className={`text-xs font-semibold px-3 py-1.5 rounded-md shadow-md 
             ${property.availability === 'Rent' 
-              ? 'bg-green-600 text-white' 
-              : 'bg-purple-600 text-white'}`}>
-            For {property.availability}
+              ? 'bg-blue-500 text-white' // Blue for Rent
+              : 'bg-amber-500 text-white'}` // Amber for Sale
+            }>
+            {property.availability === 'Rent' ? 'For Rent' : 'For Sale'}
           </span>
         </div>
         
-        {/* Favorite button */}
-        <button 
-          onClick={toggleFavorite}
-          className={`absolute top-4 right-4 p-2 rounded-full transition-all duration-300 
-            ${isFavorite 
-              ? 'bg-red-500 text-white' 
-              : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:text-red-500'}`}
-        >
-          <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
-        </button>
+        {/* Favorite button - Removed as not in the target image */}
         
-        {/* View overlay on hover */}
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex items-center justify-center"
-            >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="px-5 py-3 bg-white text-blue-600 rounded-lg font-medium flex items-center gap-2 shadow-lg"
-              >
-                <Eye className="w-5 h-5" />
-                View Details
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* View overlay on hover - Removed as not in the target image */}
       </div>
       
       {/* Property Content */}
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
-          {property.title}
-        </h3>
-        
-        <div className="flex items-center text-gray-600 mb-4">
-          <MapPin className="h-4 w-4 mr-2 flex-shrink-0 text-blue-500" />
-          <span className="line-clamp-1">{property.location}</span>
+      <div className="p-5 flex-grow flex flex-col justify-between"> {/* Added flex-grow and flex for content alignment */}
+        <div> {/* Wrapper for top content */}
+          <div className="flex items-center text-gray-500 mb-2">
+            <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0 text-blue-600" /> {/* Blue icon */}
+            <span className="text-sm line-clamp-1">{property.location}</span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-3 line-clamp-1 group-hover:text-orange-600 transition-colors">
+            {property.title}
+          </h3>
         </div>
         
-        {/* Property Features */}
-        <div className="flex justify-between items-center py-3 border-y border-gray-100 mb-4">
-          <div className="flex items-center gap-1">
-            <BedDouble className="w-4 h-4 text-blue-500" />
-            <span className="text-sm text-gray-600">{property.beds} {property.beds > 1 ? 'Beds' : 'Bed'}</span>
+        {/* Property Features - Aligned to bottom */}
+        <div className="flex items-center text-gray-600 text-sm mt-auto pt-3 border-t border-gray-100">
+          <div className="flex items-center mr-4">
+            <BedDouble className="w-4 h-4 text-gray-500 mr-1" />
+            <span>{property.beds}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Bath className="w-4 h-4 text-blue-500" />
-            <span className="text-sm text-gray-600">{property.baths} {property.baths > 1 ? 'Baths' : 'Bath'}</span>
+          <div className="flex items-center mr-4">
+            <Bath className="w-4 h-4 text-gray-500 mr-1" />
+            <span>{property.baths}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Maximize className="w-4 h-4 text-blue-500" />
-            <span className="text-sm text-gray-600">{property.sqft} sqft</span>
-          </div>
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-blue-600 font-bold">
-            <IndianRupee className="h-5 w-5 mr-1" />
-            <span className="text-xl">{Number(property.price).toLocaleString('en-IN')}</span>
-          </div>
-          
-          <div className="text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded-md flex items-center">
-            <Building className="w-3.5 h-3.5 mr-1" />
-            {property.availability === 'Rent' ? 'Rental' : 'Purchase'}
+          <div className="flex items-center">
+            <Maximize className="w-4 h-4 text-gray-500 mr-1" />
+            <span>{property.sqft} sq.ft</span>
           </div>
         </div>
       </div>
@@ -182,75 +133,89 @@ const PropertyCard = ({ property }) => {
   );
 };
 
-const PropertiesShow = () => {
+// Updated to use default parameters directly in the function signature
+const PropertiesShow = ({ 
+  title: sectionTitle = "Featured Properties", 
+  subtitle: sectionSubtitle = "Discover our exclusive selection of premier properties.", 
+  showViewAllButton = true 
+}) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const navigate = useNavigate();
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0); // 0 for initial, 1 for next, -1 for prev
+
   const categories = [
-    { id: 'all', label: 'All Properties' },
+    { id: 'all', label: 'All' }, // Simplified label
     { id: 'apartment', label: 'Apartments' },
     { id: 'villa', label: 'Villas' },
     { id: 'house', label: 'Houses' }
   ];
-  
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-  
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15
-      }
-    }
-  };
 
   useEffect(() => {
     const fetchProperties = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        const response = await axios.get(`${Backendurl}/api/products/list`);
-        
+        // const response = await axios.get(`${Backendurl}/api/properties/search`); // Old endpoint
+        const response = await axios.get(`${Backendurl}/api/properties/all`); // New endpoint
         if (response.data.success) {
-          // Take only the first 6 properties for featured section
-          const featuredProperties = response.data.property.slice(0, 6);
-          setProperties(featuredProperties);
+          setProperties(response.data.properties);
         } else {
-          setError('Failed to fetch properties');
-          // Fallback to sample data in case of API error
-          setProperties(sampleProperties);
+          setError(response.data.message || "Failed to fetch properties");
+          setProperties(sampleProperties); // Fallback to sample data on error
         }
       } catch (err) {
-        console.error('Error fetching properties:', err);
-        setError('Failed to load properties. Using sample data instead.');
-        // Fallback to sample data
-        setProperties(sampleProperties);
+        console.error("Error fetching properties:", err);
+        setError(err.message || "An error occurred while fetching properties.");
+        setProperties(sampleProperties); // Fallback to sample data on error
       } finally {
         setLoading(false);
       }
     };
 
     fetchProperties();
-  }, []);
+  }, []); // Fetch properties on component mount
 
   const filteredProperties = activeCategory === 'all' 
     ? properties 
     : properties.filter(property => property.type.toLowerCase() === activeCategory);
 
+  useEffect(() => {
+    setCurrentIndex(0); // Reset index when filteredProperties change
+    setDirection(0); // Reset direction
+  }, [filteredProperties.length, activeCategory]); // Depend on activeCategory as well
+
+  const nextProperty = () => {
+    setDirection(1);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % filteredProperties.length);
+  };
+
+  const prevProperty = () => {
+    setDirection(-1);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + filteredProperties.length) % filteredProperties.length);
+  };
+
+  const carouselItemVariants = {
+    hidden: (direction) => ({
+      opacity: 0,
+      x: direction > 0 ? "100%" : "-100%",
+    }),
+    visible: {
+      opacity: 1,
+      x: "0%",
+      transition: { type: "spring", stiffness: 100, damping: 20, duration: 0.4 },
+    },
+    exit: (direction) => ({
+      opacity: 0,
+      x: direction < 0 ? "100%" : "-100%",
+      transition: { type: "spring", stiffness: 100, damping: 20, duration: 0.4 },
+    }),
+  };
+  
   const viewAllProperties = () => {
     navigate('/properties');
   };
@@ -290,108 +255,86 @@ const PropertiesShow = () => {
     );
   }
 
-  return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="text-blue-600 font-semibold tracking-wide uppercase text-sm">Explore Properties</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4">
-            Featured Properties
+  if (error) {
+    return (
+      <div className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-3">
+            {sectionTitle} 
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Discover our handpicked selection of premium properties designed to match your lifestyle needs
+          <p className="text-lg text-gray-600 mb-10">
+            {sectionSubtitle}
           </p>
-        </motion.div>
+          <p className="text-red-500">Error: {error}. Displaying sample properties.</p>
+          {/* Render sample properties if error occurs */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 mt-8">
+            {sampleProperties.map((property) => (
+              <PropertyCard key={property._id} property={property} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-        {/* Category filter */}
-        <motion.div 
-          className="flex flex-wrap justify-center gap-4 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-200
-                ${activeCategory === category.id 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-                  : 'bg-white text-gray-700 hover:bg-gray-100 shadow-sm'}`}
-            >
-              {category.label}
-            </button>
-          ))}
-        </motion.div>
+  return (
+    <motion.section 
+      initial={{ opacity: 0, x: "100%" }} // Start off-screen to the right and invisible
+      animate={{ opacity: 1, x: 0 }}      // Animate to fully visible and at its normal position
+      transition={{ duration: 0.8, ease: "easeInOut" }} // Animation duration and easing
+      className="py-16 bg-white"
+    > 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Updated header structure */}
+        <div className="mb-10 text-center md:text-left">
+          <p className="text-sm font-semibold text-orange-600 uppercase tracking-wider mb-1">
+            {sectionSubtitle} {/* Using sectionSubtitle prop here */}
+          </p>
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                {sectionTitle} 
+              </h2>
+              {/* Decorative Line */}
+              <div className="mt-3 w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto md:ml-0"></div>
+            </div>
+            {showViewAllButton && (
+              <button 
+                onClick={viewAllProperties}
+                className="bg-black text-white text-sm font-medium py-2.5 px-6 rounded-full hover:bg-gray-800 transition-colors duration-300 flex items-center shadow-md shrink-0 ml-4"
+              >
+                All properties
+              </button>
+            )}
+          </div>
+        </div>
 
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-amber-700 bg-amber-50 p-4 rounded-lg border border-amber-200 mb-8 max-w-md mx-auto text-center"
-          >
-            <p className="font-medium mb-1">Note: {error}</p>
-            <p className="text-sm">Showing sample properties for demonstration.</p>
-          </motion.div>
-        )}
-
-        {properties.length > 0 ? (
+        {/* Properties Grid */}
+        <AnimatePresence mode="wait">
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            key={activeCategory} // Ensures re-render on category change for animation
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8" // Adjusted gap
           >
-            {filteredProperties.map((property) => (
-              <motion.div key={property._id} variants={itemVariants}>
-                <PropertyCard property={property} />
-              </motion.div>
+            {filteredProperties.slice(0, 3).map((property) => ( // Display only 3 properties
+              <PropertyCard key={property._id} property={property} />
             ))}
           </motion.div>
-        ) : (
-          <div className="text-center py-10 bg-white rounded-xl shadow-sm">
-            <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-gray-800 mb-2">No properties available</h3>
-            <p className="text-gray-600 mb-6">No properties found in this category.</p>
-            <button 
-              onClick={() => setActiveCategory('all')} 
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              View All Properties
-            </button>
-          </div>
-        )}
+        </AnimatePresence>
 
-        <motion.div 
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <button
-            onClick={viewAllProperties}
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20 font-medium"
-          >
-            Browse All Properties
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </button>
-          <p className="text-gray-600 mt-4 text-sm">
-            Discover our complete collection of premium properties
-          </p>
-        </motion.div>
+        {/* Carousel Controls - Removed as not in the target image (static grid of 3) */}
       </div>
-    </section>
+    </motion.section>
   );
 };
 
-PropertyCard.propTypes = {
-  property: PropTypes.object.isRequired
+PropertiesShow.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  showViewAllButton: PropTypes.bool,
 };
 
 export default PropertiesShow;

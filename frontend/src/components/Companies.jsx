@@ -3,29 +3,61 @@ import { logos } from '../assets/logo';
 import { motion } from 'framer-motion';
 
 const Companies = () => {
+  const allLogos = [
+    logos.Googlelogo,
+    logos.Bookinglogo,
+    logos.Airbnblogo,
+    logos.Microsoftlogo,
+    logos.Amazonlogo,
+  ];
+
+  // Duplicate logos for a seamless loop
+  const duplicatedLogos = [...allLogos, ...allLogos];
+
+  const marqueeVariants = {
+    animate: {
+      x: [0, -100 * allLogos.length], // Adjust -100 based on logo width and gap
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 20, // Adjust duration for speed
+          ease: "linear",
+        },
+      },
+    },
+  };
+
   return (
     <div className="mt-16 my-3 mx-6">
-      {/* Additional Trusted Companies Section */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="bg-white rounded-lg shadow-xl pb-12"
+        className="bg-white rounded-lg shadow-xl py-12" // Changed pb-12 to py-12 for consistent padding
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <h2 className="text-center text-lg font-semibold text-gray-900">Trusted by 200+ companies</h2>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5"
-          >
-            <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src={logos.Googlelogo} alt="Google" width="158" height="48" />
-            <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src={logos.Bookinglogo} alt="Booking" width="158" height="48" />
-            <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src={logos.Airbnblogo} alt="airbnb" width="158" height="48" />
-            <img className="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1" src={logos.Microsoftlogo} alt="Microsoft" width="158" height="48" />
-            <img className="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1" src={logos.Amazonlogo} alt="Amazon" width="158" height="48" />
-          </motion.div>
+          <h2 className="text-center text-lg font-semibold text-gray-900 mb-10">Trusted by 200+ companies</h2>
+          {/* Logo Marquee */}
+          <div className="overflow-hidden">
+            <motion.div
+              className="flex"
+              variants={marqueeVariants}
+              animate="animate"
+            >
+              {duplicatedLogos.map((logoUrl, index) => (
+                <div key={index} className="flex-shrink-0 mx-4" style={{ minWidth: '160px' }}> {/* Adjust minWidth and mx-4 as needed */}
+                  <img 
+                    className="max-h-12 w-auto object-contain" 
+                    src={logoUrl} 
+                    alt={`Company Logo ${index + 1}`} 
+                    // width="158" // Can be omitted if using w-auto and max-h for responsive sizing
+                    // height="48"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </div>

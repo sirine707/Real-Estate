@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import { Search, Home, MapPin, IndianRupee, Building } from 'lucide-react';
+import { Search, Home, MapPin, Building } from 'lucide-react';
 
 const SearchForm = ({ onSearch, isLoading }) => {
   const [searchParams, setSearchParams] = useState({
@@ -26,7 +26,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
     onSearch(searchParams);
   };
 
-  const popularCities = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Pune', 'Chennai'];
+  const popularCities = ['Downtown Dubai', 'Arabian Ranches 2', 'Palm Jumeirah', 'Dubai Marina', 'Business Bay'];
 
   const handleCitySelect = (city) => {
     setSearchParams(prev => ({
@@ -44,8 +44,8 @@ const SearchForm = ({ onSearch, isLoading }) => {
       className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg border border-gray-100"
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
-        <div className="p-2 bg-blue-100 rounded-lg mr-3 w-10 h-10 flex items-center justify-center">
-          <Search className="h-5 w-5 text-blue-600" />
+        <div className="p-2 bg-orange-100 rounded-lg mr-3 w-10 h-10 flex items-center justify-center">
+          <Search className="h-5 w-5 text-orange-600" />
         </div>
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Find Your Dream Property</h2>
       </div>
@@ -54,7 +54,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
         {/* City Field with Suggestions */}
         <div className="relative">
           <label htmlFor="city" className="flex items-center text-sm font-medium text-gray-700 mb-1.5">
-            <MapPin className="w-4 h-4 mr-1.5 text-blue-600" />
+            <MapPin className="w-4 h-4 mr-1.5 text-orange-600" />
             City
           </label>
           <div className="relative">
@@ -66,8 +66,8 @@ const SearchForm = ({ onSearch, isLoading }) => {
               onChange={handleChange}
               onFocus={() => setActiveField('city')}
               onBlur={() => setTimeout(() => setActiveField(null), 100)}
-              placeholder="Enter city name (e.g., Mumbai)"
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow text-sm sm:text-base"
+              placeholder="Enter city name (e.g., Palm Jumeirah)"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-shadow shadow-sm hover:shadow-md"
               required
             />
             {activeField === 'city' && (
@@ -82,7 +82,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
                     <div
                       key={city}
                       onClick={() => handleCitySelect(city)}
-                      className="px-3 py-2 hover:bg-blue-50 cursor-pointer text-gray-700 flex items-center"
+                      className="px-3 py-2 hover:bg-orange-50 cursor-pointer text-gray-700 flex items-center"
                     >
                       <MapPin className="w-4 h-4 mr-2 text-gray-400" />
                       {city}
@@ -98,8 +98,8 @@ const SearchForm = ({ onSearch, isLoading }) => {
           {/* Price Field */}
           <div>
             <label htmlFor="maxPrice" className="flex items-center text-sm font-medium text-gray-700 mb-1.5">
-              <IndianRupee className="w-4 h-4 mr-1.5 text-blue-600" />
-              Maximum Price (in Crores)
+              <span className="mr-1.5 text-orange-600">AED</span>
+              Maximum Price (Millions)
             </label>
             <div className="relative">
               <input
@@ -107,15 +107,15 @@ const SearchForm = ({ onSearch, isLoading }) => {
                 id="maxPrice"
                 name="maxPrice"
                 min="0.5"
-                max="50"
-                step="0.1"
+                max="50" // Assuming max 50 Million AED
+                step="0.1" // Step 0.1 Million AED (100k)
                 value={searchParams.maxPrice}
                 onChange={handleChange}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow text-sm sm:text-base"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-shadow text-sm sm:text-base"
                 required
               />
               <span className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm font-medium">
-                Cr
+                M
               </span>
             </div>
           </div>
@@ -123,7 +123,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
           {/* Property Type Field */}
           <div>
             <label htmlFor="propertyType" className="flex items-center text-sm font-medium text-gray-700 mb-1.5">
-              <Home className="w-4 h-4 mr-1.5 text-blue-600" />
+              <Home className="w-4 h-4 mr-1.5 text-orange-600" />
               Property Type
             </label>
             <select
@@ -131,7 +131,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
               name="propertyType"
               value={searchParams.propertyType}
               onChange={handleChange}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow appearance-none text-sm sm:text-base"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-shadow appearance-none text-sm sm:text-base"
             >
               <option value="Flat">Flat</option>
               <option value="Individual House">Individual House</option>
@@ -143,7 +143,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
           {/* Property Category Field */}
           <div>
             <label htmlFor="propertyCategory" className="flex items-center text-sm font-medium text-gray-700 mb-1.5">
-              <Building className="w-4 h-4 mr-1.5 text-blue-600" />
+              <Building className="w-4 h-4 mr-1.5 text-orange-600" />
               Property Category
             </label>
             <select
@@ -151,7 +151,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
               name="propertyCategory"
               value={searchParams.propertyCategory}
               onChange={handleChange}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-shadow appearance-none text-sm sm:text-base"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none transition-shadow appearance-none text-sm sm:text-base"
             >
               <option value="Residential">Residential</option>
               <option value="Commercial">Commercial</option>
@@ -161,21 +161,21 @@ const SearchForm = ({ onSearch, isLoading }) => {
           {/* Price Range Selector */}
           <div>
             <label className="flex items-center text-sm font-medium text-gray-700 mb-2 sm:mb-4">
-              <IndianRupee className="w-4 h-4 mr-1.5 text-blue-600" />
-              Price Range: ₹{searchParams.maxPrice} Cr
+              <span className="mr-1.5 text-orange-600">AED</span>
+              Price Range: {searchParams.maxPrice}M
             </label>
             <input
               type="range"
-              min="0.5"
-              max="50"
-              step="0.5"
+              min="0.5" // 0.5 Million AED
+              max="50"  // 50 Million AED
+              step="0.5" // Step 0.5 Million AED
               value={searchParams.maxPrice}
               onChange={(e) => handleChange({ target: { name: 'maxPrice', value: e.target.value }})}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-orange-600"
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>₹50L</span>
-              <span>₹50Cr</span>
+              <span>AED 0.5M</span>
+              <span>AED 50M</span>
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@ const SearchForm = ({ onSearch, isLoading }) => {
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           disabled={isLoading}
-          className="w-full mt-2 sm:mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 font-medium shadow-lg disabled:opacity-70"
+          className="w-full mt-2 sm:mt-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-300 font-medium shadow-lg disabled:opacity-70"
         >
           {isLoading ? (
             <span className="flex items-center justify-center">

@@ -9,7 +9,7 @@ import { Backendurl } from "../../App.jsx";
 
 const PropertiesPage = () => {
   const [viewState, setViewState] = useState({
-    isGridView: true,
+    isGridView: false, // Changed default to list view
     showFilters: false,
     showMap: false,
   });
@@ -21,43 +21,67 @@ const PropertiesPage = () => {
     selectedProperty: null,
   });
 
-  const [filters, setFilters] = useState({
-    propertyType: "",
-    priceRange: [0, Number.MAX_SAFE_INTEGER],
-    bedrooms: "0",
-    bathrooms: "0",
-    availability: "",
-    searchQuery: "",
-    sortBy: "",
+  // Initialize filters with URL parameters
+  const [filters, setFilters] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const typeFromUrl = params.get("type");
+    const locationFromUrl = params.get("location");
+    return {
+      propertyType: "",
+      priceRange: [0, Number.MAX_SAFE_INTEGER],
+      bedrooms: "0",
+      bathrooms: "0",
+      availability: typeFromUrl || "", // Initialize with type from URL
+      searchQuery: locationFromUrl || "", // Initialize with location from URL
+      sortBy: "",
+    };
   });
 
   const fetchProperties = async () => {
     try {
       setPropertyState((prev) => ({ ...prev, loading: true }));
-      const response = await axios.get(`${Backendurl}/api/products/list`);
+      const params = new URLSearchParams(window.location.search);
+      const type = params.get("type"); // "buy" or "rent"
+      const location = params.get("location");
+
+      let apiUrl = `${Backendurl}/api/products/list`; // Default API endpoint
+
+      if (type && location) {
+        apiUrl = `${Backendurl}/api/properties?availability=${type}&location=${encodeURIComponent(location)}`;
+      } else if (type) {
+        apiUrl = `${Backendurl}/api/properties?availability=${type}`;
+      } else if (location) {
+        apiUrl = `${Backendurl}/api/properties?location=${encodeURIComponent(location)}`;
+      }
+      
+      const response = await axios.get(apiUrl);
       if (response.data.success) {
         setPropertyState((prev) => ({
           ...prev,
-          properties: response.data.property,
+          // Ensure we check for 'properties' first, then 'property', and default to an empty array.
+          properties: response.data.properties || response.data.property || [], 
           error: null,
           loading: false,
         }));
       } else {
-        throw new Error(response.data.message);
+        throw new Error(response.data.message || "Failed to fetch properties");
       }
     } catch (err) {
       setPropertyState((prev) => ({
         ...prev,
-        error: "Failed to fetch properties. Please try again later.",
+        error: err.message || "Failed to fetch properties. Please try again later.",
         loading: false,
+        properties: [], // Ensure properties is an empty array on error
       }));
       console.error("Error fetching properties:", err);
     }
   };
 
+  // useEffect to fetch properties when filters.availability or filters.searchQuery change.
+  // This replaces the previous useEffect with an empty dependency array.
   useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [filters.availability, filters.searchQuery]); 
 
   const filteredProperties = useMemo(() => {
     return propertyState.properties
@@ -78,8 +102,23 @@ const PropertiesPage = () => {
         const bathroomsMatch = !filters.bathrooms || filters.bathrooms === "0" || 
           property.baths >= parseInt(filters.bathrooms);
 
-        const availabilityMatch = !filters.availability || 
-          property.availability?.toLowerCase() === filters.availability.toLowerCase();
+        // Corrected availabilityMatch logic to map filter values to property data values
+        const availabilityMatch = (() => {
+          if (!filters.availability) return true; // No availability filter applied
+          
+          const propAvailabilityLower = property.availability?.toLowerCase(); // e.g., "for sale", "for rent"
+          const filterValueLower = filters.availability.toLowerCase(); // e.g., "buy", "rent"
+
+          if (filterValueLower === "buy") {
+            return propAvailabilityLower === "for sale";
+          }
+          if (filterValueLower === "rent") {
+            return propAvailabilityLower === "for rent";
+          }
+          // Fallback for direct match if filterValue was already "for sale" or "for rent"
+          // (e.g., if FilterSection.jsx sets it directly)
+          return propAvailabilityLower === filterValueLower; 
+        })();
 
         return searchMatch && typeMatch && priceMatch && 
           bedroomsMatch && bathroomsMatch && availabilityMatch;
@@ -116,7 +155,7 @@ const PropertiesPage = () => {
           <div className="relative mb-6">
             {/* Main loader animation */}
             <motion.div
-              className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-blue-500/30"
+              className="w-24 h-24 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center relative shadow-lg shadow-orange-500/30"
               animate={{ 
                 rotate: [0, 0, 360, 360, 0],
                 scale: [1, 0.9, 0.9, 1, 1],
@@ -129,7 +168,7 @@ const PropertiesPage = () => {
             
             {/* Moving dots around the icon */}
             <motion.div 
-              className="absolute w-3 h-3 bg-blue-300 rounded-full right-4 bottom-10"
+              className="absolute w-3 h-3 bg-orange-300 rounded-full right-4 bottom-10"
               animate={{
                 x: [0, 30, 0, -30, 0],
                 y: [-30, 0, 30, 0, -30],
@@ -138,7 +177,7 @@ const PropertiesPage = () => {
             />
             
             <motion.div 
-              className="absolute w-2 h-2 bg-indigo-400 rounded-full"
+              className="absolute w-2 h-2 bg-red-400 rounded-full"
               animate={{
                 x: [0, -30, 0, 30, 0],
                 y: [30, 0, -30, 0, 30],
@@ -147,10 +186,10 @@ const PropertiesPage = () => {
             />
   
             {/* Background pulse effect */}
-            <div className="absolute inset-0 bg-blue-500/10 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
+            <div className="absolute inset-0 bg-orange-500/10 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h3 className="text-2xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
             Loading Properties
           </h3>
           
@@ -161,7 +200,7 @@ const PropertiesPage = () => {
           {/* Progress bar with animated gradient */}
           <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden relative">
             <motion.div
-              className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-size-200 absolute top-0 left-0 right-0"
+              className="h-full bg-gradient-to-r from-orange-600 via-red-500 to-orange-600 bg-size-200 absolute top-0 left-0 right-0"
               animate={{ 
                 backgroundPosition: ["0% center", "100% center", "0% center"] 
               }}
@@ -174,11 +213,11 @@ const PropertiesPage = () => {
             />
           </div>
           
-          <div className="flex items-center mt-4 text-xs text-blue-600">
+          <div className="flex items-center mt-4 text-xs text-orange-600">
             <motion.div 
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"
+              className="w-1.5 h-1.5 bg-orange-600 rounded-full mr-2"
             />
             <span>Please wait while we curate properties for you</span>
           </div>
@@ -198,7 +237,7 @@ const PropertiesPage = () => {
           <p className="font-medium mb-4">{propertyState.error}</p>
           <button
             onClick={fetchProperties}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+            className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 
               transition-colors duration-200"
           >
             Try Again
@@ -247,7 +286,7 @@ const PropertiesPage = () => {
           </AnimatePresence>
 
           <div className={`${viewState.showFilters ? "lg:col-span-3" : "lg:col-span-4"}`}>
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div className="bg-white p-4 rounded-lg shadow-sm mb-8 lg:mb-12"> {/* Increased bottom margin */}
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <SearchBar
                   onSearch={(query) => setFilters(prev => ({ ...prev, searchQuery: query }))}
@@ -280,60 +319,46 @@ const PropertiesPage = () => {
                     >
                       <SlidersHorizontal className="w-5 h-5" />
                     </button>
-                    <button
-                      onClick={() => setViewState(prev => ({ ...prev, isGridView: true }))}
-                      className={`p-2 rounded-lg ${
-                        viewState.isGridView ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
-                      }`}
-                    >
-                      <Grid className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => setViewState(prev => ({ ...prev, isGridView: false }))}
-                      className={`p-2 rounded-lg ${
-                        !viewState.isGridView ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
-                      }`}
-                    >
-                      <List className="w-5 h-5" />
-                    </button>
+                    {/* Removed Grid/List toggle buttons, defaulting to list view */}
                   </div>
                 </div>
               </div>
             </div>
 
-            <motion.div
-              layout
-              className={`grid gap-6 ${
-                viewState.isGridView ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
-              }`}
-            >
-              <AnimatePresence>
-                {filteredProperties.length > 0 ? (
-                  filteredProperties.map((property) => (
-                    <PropertyCard
-                      key={property._id}
-                      property={property}
-                      viewType={viewState.isGridView ? "grid" : "list"}
-                    />
-                  ))
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="col-span-full text-center py-12 bg-white rounded-lg shadow-sm"
-                  >
-                    <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      No properties found
-                    </h3>
-                    <p className="text-gray-600">
-                      Try adjusting your filters or search criteria
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+            <AnimatePresence>
+              <motion.div
+                layout
+                className={`grid gap-8 ${
+                  viewState.isGridView ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
+                }`}
+              >
+                {filteredProperties.map((property, index) => (
+                  <PropertyCard
+                    key={property._id}
+                    property={property}
+                    viewType={viewState.isGridView ? "grid" : "list"} // Pass correct viewType
+                    isLast={index === filteredProperties.length - 1} // Add isLast prop
+                  />
+                ))}
+              </motion.div>
+            </AnimatePresence>
+
+            {filteredProperties.length === 0 && !propertyState.loading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="col-span-full text-center py-12 bg-white rounded-lg shadow-sm"
+              >
+                <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No properties found
+                </h3>
+                <p className="text-gray-600">
+                  Try adjusting your filters or search criteria
+                </p>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

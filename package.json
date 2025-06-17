@@ -1,7 +1,7 @@
 {
-  "name": "buildestate",
+  "name": "EmiratEstate",
   "version": "1.0.0",
-  "description": "BuildEstate - Premium Real Estate Platform with AI-Powered Insights",
+  "description": "EmiratEstate - Discover Real state from your own EaseReal Estate Platform with AI-Powered Insights",
   "private": true,
   "scripts": {
     "setup": "npm install && cd backend && npm install && cd ../frontend && npm install && cd ../admin && npm install",
@@ -34,6 +34,9 @@
   },
   "homepage": "https://github.com/AAYUSH412/Real-Estate-Website#readme",
   "devDependencies": {
-    "concurrently": "^8.0.0"
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@huggingface/inference": "^4.0.5"
   }
 }

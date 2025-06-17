@@ -3,18 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
   MapPin, 
-  IndianRupee, 
   BedDouble, 
   Bath, 
   Maximize,
+  Heart,
+  Eye,
+  ArrowRight,
+  Building,
   Share2,
   ChevronLeft,
-  ChevronRight,
-  Eye
+  ChevronRight
 } from 'lucide-react';
 import PropTypes from 'prop-types';
 
-const PropertyCard = ({ property, viewType }) => {
+const PropertyCard = ({ property, viewType, isLast }) => {
   const isGrid = viewType === 'grid';
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -61,13 +63,13 @@ const PropertyCard = ({ property, viewType }) => {
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
       className={`group bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300
-        ${isGrid ? 'flex flex-col' : 'flex flex-row gap-6'}`}
+        ${viewType === 'list' ? 'flex flex-row gap-6' : 'flex flex-col'}`}
       onClick={handleNavigateToDetails}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
       {/* Image Carousel Section */}
-      <div className={`relative ${isGrid ? 'h-64' : 'w-96'}`}>
+      <div className={`relative ${viewType === 'list' ? `w-1/3 ${isLast ? 'h-auto' : 'h-full'}` : `h-64 w-full ${isLast ? 'h-56' : 'h-64'}`}`}>
         <AnimatePresence mode="wait">
           <motion.img
             key={currentImageIndex}
@@ -77,7 +79,7 @@ const PropertyCard = ({ property, viewType }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-full h-full object-cover rounded-t-xl rounded-b-none"
+            className={`object-cover w-full h-full ${viewType === 'list' ? 'rounded-l-xl rounded-r-none' : 'rounded-t-xl rounded-b-none'}`}
           />
         </AnimatePresence>
 
@@ -123,7 +125,7 @@ const PropertyCard = ({ property, viewType }) => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             onClick={handleShare}
-            className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-blue-50 
+            className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-amber-50 \
               transition-colors shadow-lg"
           >
             <Share2 className="w-4 h-4 text-gray-700" />
@@ -135,7 +137,7 @@ const PropertyCard = ({ property, viewType }) => {
           <motion.span 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-gradient-to-r from-blue-600 to-blue-500 text-white 
+            className="bg-gradient-to-r from-amber-600 to-amber-500 text-white \
               px-3 py-1 rounded-full text-sm font-medium shadow-lg"
           >
             {property.type}
@@ -152,11 +154,11 @@ const PropertyCard = ({ property, viewType }) => {
       </div>
 
       {/* Content Section */}
-      <div className={`flex-1 p-6 ${isGrid ? '' : 'flex flex-col justify-between'}`}>
+      <div className={`p-6 ${viewType === 'list' ? 'w-2/3 flex flex-col justify-between' : 'flex-1'}`}>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center text-gray-500 text-sm">
-              <MapPin className="w-4 h-4 mr-2 text-blue-500" />
+              <MapPin className="w-4 h-4 mr-2 text-amber-500" />
               {property.location}
             </div>
             <div className="flex items-center gap-1 text-gray-500 text-sm">
@@ -165,19 +167,17 @@ const PropertyCard = ({ property, viewType }) => {
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold text-gray-900 line-clamp-2 
-            group-hover:text-blue-600 transition-colors">
+          <h3 className="text-xl font-semibold text-gray-900 line-clamp-2 \
+            group-hover:text-amber-600 transition-colors">
             {property.title}
           </h3>
 
           <div className="flex items-center gap-2">
             <div className="flex-1">
               <p className="text-sm text-gray-500 mb-1">Price</p>
-              <div className="flex items-center gap-1">
-                <IndianRupee className="w-5 h-5 text-blue-600" />
-                <span className="text-2xl font-bold text-blue-600">
-                  {Number(property.price).toLocaleString('en-IN')}
-                </span>
+              <div className="flex items-center text-amber-600 font-bold text-lg">
+                <span className="mr-1">DH</span>
+                <span >{Number(property.price).toLocaleString('en-AE')}</span>
               </div>
             </div>
             {/* Rest of your price-related content */}
@@ -186,20 +186,20 @@ const PropertyCard = ({ property, viewType }) => {
 
         {/* Property Features */}
         <div className="grid grid-cols-3 gap-3 mt-6">
-          <div className="flex flex-col items-center gap-1 bg-blue-50 p-2 rounded-lg">
-            <BedDouble className="w-5 h-5 text-blue-600" />
+          <div className="flex flex-col items-center gap-1 bg-amber-50 p-2 rounded-lg">
+            <BedDouble className="w-5 h-5 text-amber-600" />
             <span className="text-sm font-medium text-gray-600">
               {property.beds} {property.beds > 1 ? 'Beds' : 'Bed'}
             </span>
           </div>
-          <div className="flex flex-col items-center gap-1 bg-blue-50 p-2 rounded-lg">
-            <Bath className="w-5 h-5 text-blue-600" />
+          <div className="flex flex-col items-center gap-1 bg-amber-50 p-2 rounded-lg">
+            <Bath className="w-5 h-5 text-amber-600" />
             <span className="text-sm font-medium text-gray-600">
               {property.baths} {property.baths > 1 ? 'Baths' : 'Bath'}
             </span>
           </div>
-          <div className="flex flex-col items-center gap-1 bg-blue-50 p-2 rounded-lg">
-            <Maximize className="w-5 h-5 text-blue-600" />
+          <div className="flex flex-col items-center gap-1 bg-amber-50 p-2 rounded-lg">
+            <Maximize className="w-5 h-5 text-amber-600" />
             <span className="text-sm font-medium text-gray-600">
               {property.sqft} sqft
             </span>
@@ -212,7 +212,12 @@ const PropertyCard = ({ property, viewType }) => {
 
 PropertyCard.propTypes = {
   property: PropTypes.object.isRequired,
-  viewType: PropTypes.string.isRequired
+  viewType: PropTypes.string.isRequired,
+  isLast: PropTypes.bool, // Added prop type for isLast
+};
+
+PropertyCard.defaultProps = {
+  isLast: false, // Default value for isLast
 };
 
 export default PropertyCard;

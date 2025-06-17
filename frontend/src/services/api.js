@@ -21,9 +21,10 @@ export const searchProperties = async (searchParams) => {
   }
 };
 
-export const getLocationTrends = async (city) => {
+export const getCityPriceAnalysis = async (city) => {
   try {
-    const response = await api.get(`/api/locations/${encodeURIComponent(city)}/trends`);
+    // Corrected the API endpoint to match the backend route
+    const response = await api.get(`/api/locations/${encodeURIComponent(city)}/price-analysis`);
     return response.data;
   } catch (error) {
     console.error('Error fetching location trends:', error);

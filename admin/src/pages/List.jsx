@@ -237,7 +237,7 @@ const PropertyListings = () => {
 
                   <div className="flex items-center justify-between mb-6">
                     <p className="text-2xl font-bold text-blue-600">
-                      ₹{property.price.toLocaleString()}
+                      DH {property.price.toLocaleString()}
                     </p>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                       property.availability === 'rent' 

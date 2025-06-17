@@ -1,5 +1,6 @@
 import firecrawlService from '../services/firecrawlService.js';
 import aiService from '../services/aiService.js';
+import Property from '../models/propertymodel.js'; // Import the Property model
 
 export const searchProperties = async (req, res) => {
     try {
@@ -42,34 +43,93 @@ export const searchProperties = async (req, res) => {
     }
 };
 
-export const getLocationTrends = async (req, res) => {
+// Renamed from getLocationTrends to getCityPriceAnalysis
+export const getCityPriceAnalysis = async (req, res) => {
     try {
         const { city } = req.params;
-        const { limit = 5 } = req.query;
 
         if (!city) {
             return res.status(400).json({ success: false, message: 'City parameter is required' });
         }
 
-        // Extract location trend data using Firecrawl, with limit
-        const locationsData = await firecrawlService.getLocationTrends(city, Math.min(limit, 5));
+        // Fetches raw price trend data (current and historical)
+        // Calls the renamed service method
+        const rawPriceTrendData = await firecrawlService.getCityPriceAnalysis(city);
 
-        // Analyze the location trends using AI
-        const analysis = await aiService.analyzeLocationTrends(
-            locationsData.locations,
+        // Analyzes the fetched price trend data
+        // aiService.analyzeLocationTrends might need to be renamed to aiService.analyzePriceTrends for consistency,
+        // but we'll assume it correctly processes the rawPriceTrendData.price_trend object.
+        // The name of the AI service method is kept as analyzeLocationTrends for now, as its internal prompt
+        // is more about general location/trend analysis rather than just raw price numbers.
+        const priceTrendAnalysis = await aiService.analyzeLocationTrends( 
+            rawPriceTrendData.price_trend, 
             city
         );
 
         res.json({
             success: true,
-            locations: locationsData.locations,
-            analysis
+            detailedPriceTrend: rawPriceTrendData.price_trend, // Contains current/historical prices
+            analysis: priceTrendAnalysis, // Contains the AI's textual analysis of the trends
         });
     } catch (error) {
-        console.error('Error getting location trends:', error);
+        console.error('Error getting city price analysis:', error); // Updated error message
         res.status(500).json({ 
             success: false, 
-            message: 'Failed to get location trends',
+            message: 'Failed to get city price analysis', // Updated error message
+            error: error.message
+        });
+    }
+};
+
+// New function to get all properties
+export const getAllProperties = async (req, res) => {
+    try {
+        const properties = await Property.find({}); // Fetch all properties
+        res.json({
+            success: true,
+            properties
+        });
+    } catch (error) {
+        console.error('Error fetching all properties:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch all properties',
+            error: error.message
+        });
+    }
+};
+
+// New function to get properties by filters (availability and location)
+export const getPropertiesByFilters = async (req, res) => {
+    try {
+        const { type, location } = req.query;
+        const mongoQuery = {};
+
+        if (location) {
+            mongoQuery.location = new RegExp(location, 'i'); // Case-insensitive search
+        }
+
+        if (type) {
+            if (type.toLowerCase() === 'buy') {
+                mongoQuery.availability = 'For Sale';
+            } else if (type.toLowerCase() === 'rent') {
+                mongoQuery.availability = 'For Rent';
+            }
+            // If type is something else or not provided, it won't filter by availability unless specified
+        }
+
+        const properties = await Property.find(mongoQuery);
+        
+        res.json({
+            success: true,
+            properties
+        });
+
+    } catch (error) {
+        console.error('Error fetching properties by filters:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch properties by filters',
             error: error.message
         });
     }

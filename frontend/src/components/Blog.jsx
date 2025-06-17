@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Calendar, ArrowRight, Clock, Share2, Bookmark, BookmarkCheck, Search, Tag, ExternalLink, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { blogPosts } from '../assets/blogdata';
 import { toast } from 'react-toastify';
@@ -84,112 +83,35 @@ const BlogCard = ({ post }) => {
 
   return (
     <motion.div
-      className="group bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100"
+      className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-200" // Adjusted shadow and border
       variants={cardVariants}
-      whileHover={{ y: -8, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+      whileHover={{ y: -5, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" }} // Simplified hover effect
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      onClick={handleReadMore}
+      onClick={handleReadMore} // Keep card clickable
     >
       <div className="relative overflow-hidden aspect-w-16 aspect-h-9">
         <img
           src={post.image}
           alt={post.title}
-          className="w-full h-64 object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+          className="w-full h-48 object-cover transition-transform duration-500 ease-in-out group-hover:scale-105" // Adjusted height and hover scale
         />
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-70'}`} />
-        
-        <div className="absolute top-4 left-4 z-10">
-          <span className="px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-medium rounded-full shadow-sm">
-            {category}
-          </span>
-        </div>
-        
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="absolute bottom-0 left-0 right-0 p-4 flex justify-center"
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleReadMore();
-                }}
-                className="px-4 py-2 bg-white/90 backdrop-blur-sm text-blue-600 rounded-full flex items-center gap-2 hover:bg-blue-600 hover:text-white transition-colors duration-300 font-medium text-sm shadow-lg"
-              >
-                Read Full Article <ExternalLink className="w-3.5 h-3.5" />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="absolute top-4 right-4 flex flex-col gap-3">
-          <motion.button
-            whileTap={pulseAnimation}
-            onClick={handleBookmark}
-            className={`p-2 backdrop-blur-sm rounded-full shadow-lg 
-              ${isBookmarked 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white/80 text-gray-700 hover:bg-blue-50'
-              } transition-colors duration-200`}
-          >
-            {isBookmarked ? (
-              <BookmarkCheck className="w-4 h-4" />
-            ) : (
-              <Bookmark className="w-4 h-4" />
-            )}
-          </motion.button>
-          
-          <motion.button
-            whileTap={pulseAnimation}
-            onClick={handleShare}
-            className="p-2 bg-white/80 backdrop-blur-sm text-gray-700 rounded-full hover:bg-blue-50 transition-colors duration-200 shadow-lg"
-          >
-            <Share2 className="w-4 h-4" />
-          </motion.button>
-        </div>
+        {/* Removed gradient overlay and hover effects on image */}
       </div>
 
-      <div className="p-6">
-        <div className="flex items-center justify-between text-gray-500 text-xs mb-3">
-          <div className="flex items-center">
-            <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
-            {post.date}
-          </div>
-          <div className="flex items-center">
-            <Clock className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
-            {estimatedReadTime} min read
-          </div>
+      <div className="p-5"> {/* Adjusted padding */}
+        {/* Category Tag - Styled to match image */}
+        <div className="mb-3">
+          <span className="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
+            {category} 
+          </span>
         </div>
 
-        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-amber-600 transition-colors">
           {post.title}
         </h3>
         
-        <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">
-          {post.excerpt}
-        </p>
-
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleReadMore();
-            }}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors text-sm"
-          >
-            Continue Reading
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </button>
-
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <Tag className="w-3 h-3 text-gray-400" />
-            <span>{post.tags?.[0] || "Property"}</span>
-          </div>
-        </div>
+        {/* Removed excerpt, date, read time, share/bookmark buttons, and continue reading link to match the simpler design */}
       </div>
     </motion.div>
   );
@@ -199,74 +121,84 @@ const BlogCard = ({ post }) => {
 const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  
+
+  // Animation for the entire section
+  const sectionVariants = {
+    hidden: { opacity: 0, x: "-100%" }, // MODIFIED: x: "-100%" to slide from left
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeInOut", 
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   const categories = ['All', 'Buying', 'Selling', 'Investment', 'Tips'];
   
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+                          (post.excerpt && post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())); // Added check for post.excerpt
     const matchesCategory = selectedCategory === 'All' || (post.category || 'Real Estate') === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
+    return matchesSearch && matchesCategory; // Corrected filter logic
   });
 
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+    <motion.section 
+      className="py-20 bg-gradient-to-b from-white to-gray-50"
+      variants={sectionVariants}
+      initial="hidden"
+      animate="visible" // CHANGED from whileInView
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
+        {/* MODIFIED: Main header wrapper - items-center for md screens and up */}
+        <motion.div 
+          className="flex flex-col md:flex-row justify-between items-center md:items-center mb-12" // Changed md:items-start to md:items-center
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4 relative inline-block">
-            Latest Insights
-            <div className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-blue-600 rounded-full"></div>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mt-6">
-            Expert advice and tips for your real estate journey
-          </p>
-        </motion.div>
-        
-        {/* Search and filter section */}
-        <div className="mb-12">
-          <div className="flex flex-col md:flex-row gap-4 justify-between">
-            <div className="relative max-w-md w-full">
-              <input
-                type="text"
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          {/* Text block - order 1 on md+ (left side) - RESTRUCTURED */}
+          <div className="md:order-1 text-center md:text-left w-full md:w-auto mb-6 md:mb-0">
+            {/* Subtitle: "Latest Insights & Trends" */}
+            <div className="text-sm font-semibold text-orange-600 uppercase tracking-wider">
+              Latest Insights & Trends
             </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    selectedCategory === category
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
+
+            {/* Main Title: "Proven Expertise" (styled like "Featured Properties" title) */}
+            <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-800">
+              Proven Expertise
+            </h2>
+
+            {/* Decorative Line - under "Proven Expertise" */}
+            <div className="mt-4 w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto md:ml-0"></div>
           </div>
-        </div>
+
+          {/* Filter buttons block - order 2 on md+ (right side) */}
+          <div className="w-full md:w-auto flex flex-wrap gap-2 justify-center md:justify-end md:order-2">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedCategory === category
+                    ? 'bg-orange-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </motion.div>
         
         {filteredPosts.length > 0 ? (
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants} // RE-ENABLED
+            initial="hidden" // RE-ENABLED
+            whileInView="visible" // RE-ENABLED
+            viewport={{ once: true, amount: 0.1 }} // RE-ENABLED and changed margin to amount
           >
             {filteredPosts.map((post) => (
               <BlogCard key={post.id} post={post} />
@@ -287,20 +219,9 @@ const Blog = () => {
           </motion.div>
         )}
         
-        {/* View all articles button */}
-        <div className="text-center mt-16">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl 
-              shadow-lg hover:shadow-xl transition-all font-medium inline-flex items-center"
-          >
-            View All Articles
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </motion.button>
-        </div>
+        {/* View all articles button REMOVED */}
       </div>
-    </section>
+    </motion.section>
   );
 };
 

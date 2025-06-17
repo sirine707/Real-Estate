@@ -14,9 +14,9 @@ export default function Team() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold mb-4">Meet Our Team</h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-orange-600 mx-auto mb-6"></div>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            The passionate individuals behind BuildEstate's success
+            The passionate individuals behind EmiratEstate's success
           </p>
         </motion.div>
 
