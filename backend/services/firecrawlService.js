@@ -345,14 +345,21 @@ class FirecrawlService {
 
   // Debug/test function to check Firecrawl API with a public URL (string-based call)
   async testScrapeUrl() {
-    const testUrl = 'https://example.com';
+    const testUrl = "https://example.com";
     try {
-      console.log('[FirecrawlService] Testing scrapeUrl with (string call):', testUrl);
+      console.log(
+        "[FirecrawlService] Testing scrapeUrl with (string call):",
+        testUrl
+      );
       const result = await this.firecrawl.scrapeUrl(testUrl);
-      console.log('[FirecrawlService] scrapeUrl result:', result);
+      console.log("[FirecrawlService] scrapeUrl result:", result);
       return result;
     } catch (error) {
-      console.error('[FirecrawlService] scrapeUrl test error (string call):', error.message, error.response?.data);
+      console.error(
+        "[FirecrawlService] scrapeUrl test error (string call):",
+        error.message,
+        error.response?.data
+      );
       return null;
     }
   }
