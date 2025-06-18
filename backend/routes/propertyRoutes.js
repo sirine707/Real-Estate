@@ -1,5 +1,5 @@
 import express from 'express';
-import { searchProperties, getCityPriceAnalysis, getAllProperties, getPropertiesByFilters } from '../controller/propertyController.js';
+import { searchProperties, getCityPriceAnalysis, getAllProperties, getPropertiesByFilters, testFirecrawl } from '../controller/propertyController.js';
 
 const router = express.Router();
 
@@ -14,5 +14,8 @@ router.get('/properties', getPropertiesByFilters);
 
 // Route to get all properties
 router.get('/properties/all', getAllProperties);
+
+// Route to test Firecrawl API
+router.get('/test-firecrawl', testFirecrawl);
 
 export default router;

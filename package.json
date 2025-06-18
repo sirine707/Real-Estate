@@ -37,6 +37,7 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "@huggingface/inference": "^4.0.5"
+    "@huggingface/inference": "^4.0.5",
+    "firecrawl": "^1.25.5"
   }
 }

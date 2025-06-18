@@ -134,3 +134,13 @@ export const getPropertiesByFilters = async (req, res) => {
         });
     }
 };
+
+// Debug route to test Firecrawl API with https://example.com
+export const testFirecrawl = async (req, res) => {
+    try {
+        const result = await firecrawlService.testScrapeUrl();
+        res.json({ success: true, result });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Test failed', error: error.message });
+    }
+};
