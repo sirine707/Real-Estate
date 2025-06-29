@@ -10,7 +10,7 @@
     "build": "npm install",
     "render-build": "npm install && npm run build"
   },
-  "author": "Aayush Vaghela",
+  "author": "Sirine Jnayeh",
   "license": "ISC",
   "dependencies": {
     "@azure-rest/ai-inference": "^1.0.0-beta.5",
@@ -36,6 +36,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
+    "playwright": "^1.53.1",
     "transporter": "^0.0.1",
     "validator": "^13.12.0"
   }
