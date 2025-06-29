@@ -24,6 +24,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const { isLoggedIn, user, logout } = useAuth();
   const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   // Handle click outside of dropdown
   useEffect(() => {
@@ -52,6 +53,13 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Reset scroll state when changing to a non-home page
+  useEffect(() => {
+    if (!isHomePage) {
+      setScrolled(true);
+    }
+  }, [isHomePage]);
+
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -74,25 +82,34 @@ const Navbar = () => {
       .toUpperCase();
   };
 
+  const navAnimation = isHomePage
+    ? {
+        y: scrolled ? 0 : "-100%",
+        opacity: scrolled ? 1 : 0,
+      }
+    : {
+        y: 0,
+        opacity: 1,
+      };
+
   return (
     <motion.nav
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-2xl shadow-lg" // Updated for even more blur
-          : "bg-white border-b border-gray-200"
-      }`}
+      initial={false} // Prevent initial animation on page load for non-home pages
+      animate={navAnimation}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-2xl shadow-lg"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-3">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link
+            to="/"
+            className="flex items-center space-x-2 group -ml-1 md:-ml-2"
+          >
             <motion.div
               whileHover={{ rotate: [0, -10, 10, -10, 0] }}
               transition={{ duration: 0.5 }}
-              className="p-2 rounded-lg"
+              className="p-1.5 rounded-lg"
             >
               <Building className="w-6 h-6 text-orange-500" />
             </motion.div>
@@ -253,7 +270,11 @@ NavLink.propTypes = {
 
 const NavLinks = ({ currentPath }) => (
   <div className="flex items-center space-x-1">
-    <NavLink to="/" icon={<Home className="w-4 h-4" />} currentPath={currentPath}>
+    <NavLink
+      to="/"
+      icon={<Home className="w-4 h-4" />}
+      currentPath={currentPath}
+    >
       Home
     </NavLink>
     <NavLink
@@ -319,7 +340,11 @@ const MobileNavLinks = ({
             }`}
           >
             <div className="relative">
-              <BotMessageSquare className={`w-5 h-5 ${isAIHubActive ? 'text-white' : 'text-orange-700'}`} />
+              <BotMessageSquare
+                className={`w-5 h-5 ${
+                  isAIHubActive ? "text-white" : "text-orange-700"
+                }`}
+              />
               <motion.div
                 animate={{ rotate: [0, 15, -15, 0] }}
                 transition={{
@@ -333,7 +358,8 @@ const MobileNavLinks = ({
               </motion.div>
             </div>
             <div className="flex-1">
-              <div className="font-medium text-lg">Aqarat AI</div> {/* Increased font size for Aqarat AI mobile link */}
+              <div className="font-medium text-lg">Aqarat AI</div>{" "}
+              {/* Increased font size for Aqarat AI mobile link */}
               <div
                 className={`text-sm ${
                   isAIHubActive ? "text-yellow-100" : "text-orange-500"
@@ -374,7 +400,8 @@ const MobileNavLinks = ({
               onClick={() => setMobileMenuOpen(false)}
             >
               <Icon className="w-5 h-5" />
-              <span className="text-base">{name}</span> {/* Increased font size for other mobile nav links */}
+              <span className="text-base">{name}</span>{" "}
+              {/* Increased font size for other mobile nav links */}
             </Link>
           </motion.div>
         );
