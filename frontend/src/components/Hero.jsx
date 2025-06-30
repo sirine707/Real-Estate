@@ -205,25 +205,25 @@ const Hero = ({ onEmiratEstateGPTClick }) => {
                     </button>{" "}
                     {/* Increased py-0.5 to py-1 */}
                   </div>
-                  <select className="p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-orange-500 focus:border-transparent outline-none bg-white text-xs">
+                  <select className="p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-orange-500 focus:border-transparent outline-none bg-white text-xs text-gray-900">
                     {" "}
-                    {/* Changed p-1.5 to p-2 */}
+                    {/* Added text-gray-900 */} {/* Changed p-1.5 to p-2 */}
                     <option>Residential</option>
                     <option>Commercial</option>
                     <option>Land</option>
                   </select>
-                  <select className="p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-orange-500 focus:border-transparent outline-none bg-white text-xs">
+                  <select className="p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-orange-500 focus:border-transparent outline-none bg-white text-xs text-gray-900">
                     {" "}
-                    {/* Changed p-1.5 to p-2 */}
+                    {/* Added text-gray-900 */} {/* Changed p-1.5 to p-2 */}
                     <option>Beds & Baths</option>
                     <option>1 Bed</option>
                     <option>2 Beds</option>
                     <option>3 Beds</option>
                     <option>4+ Beds</option>
                   </select>
-                  <select className="p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-orange-500 focus:border-transparent outline-none bg-white text-xs">
+                  <select className="p-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-orange-500 focus:border-transparent outline-none bg-white text-xs text-gray-900">
                     {" "}
-                    {/* Changed p-1.5 to p-2 */}
+                    {/* Added text-gray-900 */} {/* Changed p-1.5 to p-2 */}
                     <option>Price (AED)</option>
                     <option>0 - 500,000</option>
                     <option>500,000 - 1,000,000</option>
