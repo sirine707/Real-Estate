@@ -119,9 +119,10 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center md:space-x-6 space-x-8">
+            {" "}
+            {/* Adjusted space-x for medium screens */}
             <NavLinks currentPath={location.pathname} />
-
             {/* Auth Buttons */}
             <div className="flex items-center space-x-4">
               {isLoggedIn ? (
@@ -178,7 +179,9 @@ const Navbar = () => {
                   </AnimatePresence>
                 </div>
               ) : (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center md:space-x-2 space-x-4">
+                  {" "}
+                  {/* Adjusted space-x for medium screens */}
                   <Link
                     to="/login"
                     className="text-gray-700 hover:text-orange-600 font-medium transition-colors"
@@ -191,7 +194,10 @@ const Navbar = () => {
                   >
                     <Link
                       to="/signup"
-                      className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-5 py-2 rounded-lg hover:from-orange-500 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                      className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-5 py-2 rounded-lg hover:from-orange-500 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium
+                        md:px-6 md:py-2 md:text-base
+                        lg:px-7 lg:py-2.5 lg:text-lg
+                        whitespace-nowrap"
                     >
                       Get started
                     </Link>

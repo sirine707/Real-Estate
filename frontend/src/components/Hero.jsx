@@ -65,6 +65,8 @@ const Hero = ({ onEmiratEstateGPTClick }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchType, setSearchType] = useState("buy"); // 'buy' or 'rent'
+  const [activeAvailabilityFilter, setActiveAvailabilityFilter] =
+    useState("All"); // Added state for availability filter
 
   const handleSubmit = (location = searchQuery) => {
     navigate(
@@ -192,15 +194,36 @@ const Hero = ({ onEmiratEstateGPTClick }) => {
                 {/* Second Row of Filters - MOVED INSIDE */}
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <div className="flex items-center space-x-1 p-1 bg-gray-100 rounded-lg">
-                    <button className="px-2 py-1 bg-orange-100 text-orange-700 rounded-md">
+                    <button
+                      onClick={() => setActiveAvailabilityFilter("All")}
+                      className={`px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                        activeAvailabilityFilter === "All"
+                          ? "bg-orange-100 text-orange-700"
+                          : "text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
                       All
                     </button>{" "}
                     {/* Increased py-0.5 to py-1 */}
-                    <button className="px-2 py-1 text-gray-600 hover:bg-gray-200 rounded-md">
+                    <button
+                      onClick={() => setActiveAvailabilityFilter("Ready")}
+                      className={`px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                        activeAvailabilityFilter === "Ready"
+                          ? "bg-orange-100 text-orange-700"
+                          : "text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
                       Ready
                     </button>{" "}
                     {/* Increased py-0.5 to py-1 */}
-                    <button className="px-2 py-1 text-gray-600 hover:bg-gray-200 rounded-md">
+                    <button
+                      onClick={() => setActiveAvailabilityFilter("Off-Plan")}
+                      className={`px-2 py-1 rounded-md text-sm font-medium transition-colors ${
+                        activeAvailabilityFilter === "Off-Plan"
+                          ? "bg-orange-100 text-orange-700"
+                          : "text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
                       Off-Plan
                     </button>{" "}
                     {/* Increased py-0.5 to py-1 */}
