@@ -53,6 +53,7 @@ app.use(
       "https://EmiratEstate.vercel.app",
       "https://real-estate-website-admin.onrender.com",
       "https://real-estate-website-backend-zfu7.onrender.com",
+      "https://real-estate-frontend-f4ld.vercel.app", // Added your Vercel frontend URL
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"], // Added HEAD
