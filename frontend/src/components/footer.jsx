@@ -115,7 +115,7 @@ const socialLinks = [
   }, // Changed gradient to solid orange
   {
     icon: Github,
-    href: "https://github.com/AAYUSH412/Real-Estate-Website",
+    href: "https://github.com/sirine707/Real-Estate",
     label: "GitHub",
     color: "bg-gray-700",
     hoverColor: "hover:bg-gray-800",

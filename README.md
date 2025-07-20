@@ -18,7 +18,7 @@ A real estate platform
 <summary><b>Step 1: Clone the repository</b></summary>
 
 ```bash
-git clone https://github.com/AAYUSH412/Real-Estate-Website.git
+git clone https://github.com/sirine707/Real-Estate.git
 cd Real-Estate-Website
 ```
 
@@ -43,7 +43,7 @@ NODE_ENV=development
 IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
 IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
 IMAGEKIT_URL_ENDPOINT=your_imagekit_url_endpoint
-ADMIN_EMAIL=admin@buildestate.com
+ADMIN_EMAIL=admin@EmiratEstate.com
 ADMIN_PASSWORD=admin123
 WEBSITE_URL=http://localhost:5173
 GEMINI_API_KEY=your_gemini_api_key
@@ -129,7 +129,7 @@ Below are screenshots of the application (from `images/`):
 
 ### 👩‍💼 Admin Panel Screenshots
 
-Below are screenshots of the admin panel :
+Below are screenshots of the admin panel (from `images/`):
 
 <div align="center">
   <img src="images/admin_cap1.png" alt="Admin Screenshot 1" width="80%" />
@@ -185,7 +185,7 @@ This will populate your database with sample properties, users, and appointments
 
 After running the seed script, you can log in to the admin panel with:
 
-- **Email:** admin@buildestate.com
+- **Email:** admin@EmiratEstate.com
 - **Password:** admin123
 </details>
 
@@ -235,7 +235,7 @@ project/
 
 ### Property Search & Discovery
 
-BuildEstate offers a sophisticated property search system with multiple filtering options:
+EmiratEstate offers a sophisticated property search system with multiple filtering options:
 
 - **Location-based search** with map integration
 - **Price range filters** with dynamic market comparison
@@ -270,7 +270,7 @@ The platform offers comprehensive user account features:
 
 ## 💌 Newsletter Management
 
-BuildEstate includes a newsletter system for property updates and market trends:
+EmiratEstate includes a newsletter system for property updates and market trends:
 
 - **Subscription management** via user profile
 - **Email preference center** for customizing update frequency
@@ -315,7 +315,7 @@ For additional help, [open an issue](https://github.com/sirine707/Real-Estate/is
 
 ## 🤝 Contributing
 
-We welcome contributions to BuildEstate! Please follow these steps:
+We welcome contributions to EmiratEstate! Please follow these steps:
 
 1. **Fork the repository**
 2. **Create a feature branch:**

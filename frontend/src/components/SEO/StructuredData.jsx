@@ -1,5 +1,5 @@
-import { useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const StructuredData = ({ type, data }) => {
   const location = useLocation();
@@ -8,69 +8,69 @@ const StructuredData = ({ type, data }) => {
   // Different schema types based on page content
   const schemas = {
     website: {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: 'EmiratEstate',
-      url: 'https://EmiratEstate.vercel.app',
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "EmiratEstate",
+      url: "https://EmiratEstate.vercel.app",
       potentialAction: {
-        '@type': 'SearchAction',
-        target: '{search_term_string}',
-        'query-input': 'required name=search_term_string'
-      }
+        "@type": "SearchAction",
+        target: "{search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
     },
     organization: {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'EmiratEstate',
-      url: 'https://EmiratEstate.vercel.app',
-      logo: 'https://EmiratEstate.vercel.app/logo.png',
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "EmiratEstate",
+      url: "https://EmiratEstate.vercel.app",
+      logo: "https://EmiratEstate.vercel.app/logo.png",
       sameAs: [
-        'https://github.com/AAYUSH412/Real-Estate-Website',
-        'https://linkedin.com/in/AAYUSH412'
-      ]
+        "https://github.com/sirine707/Real-Estate",
+        "https://linkedin.com/in/sirine-jnayeh",
+      ],
     },
     property: {
-      '@context': 'https://schema.org',
-      '@type': 'RealEstateListing',
-      name: data?.title || 'Property Listing',
-      description: data?.description || 'Property details',
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      name: data?.title || "Property Listing",
+      description: data?.description || "Property details",
       url: currentUrl,
       datePosted: data?.createdAt || new Date().toISOString(),
       address: {
-        '@type': 'PostalAddress',
-        addressLocality: data?.location || 'City',
-        addressRegion: data?.region || 'Region',
-        addressCountry: 'IN'
+        "@type": "PostalAddress",
+        addressLocality: data?.location || "City",
+        addressRegion: data?.region || "Region",
+        addressCountry: "IN",
       },
-      price: data?.price ? `DH ${data.price}` : '',
+      price: data?.price ? `DH ${data.price}` : "",
       floorSize: {
-        '@type': 'QuantitativeValue',
-        unitText: 'SQFT',
-        value: data?.sqft || ''
+        "@type": "QuantitativeValue",
+        unitText: "SQFT",
+        value: data?.sqft || "",
       },
-      numberOfRooms: data?.beds || '',
-      numberOfBathroomsTotal: data?.baths || ''
+      numberOfRooms: data?.beds || "",
+      numberOfBathroomsTotal: data?.baths || "",
     },
     aiHub: {
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: 'Aqarat AI',
-      applicationCategory: 'RealEstateApplication',
-      description: 'AI-powered real estate analytics and recommendations tool',
-      url: 'https://EmiratEstate.vercel.app/ai-property-hub',
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: "Aqarat AI",
+      applicationCategory: "RealEstateApplication",
+      description: "AI-powered real estate analytics and recommendations tool",
+      url: "https://EmiratEstate.vercel.app/ai-property-hub",
       offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'INR',
-        availability: 'https://schema.org/InStock'
-      }
-    }
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "INR",
+        availability: "https://schema.org/InStock",
+      },
+    },
   };
 
   const schemaData = schemas[type] || schemas.website;
 
   return (
-    <script 
+    <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
     />
@@ -78,10 +78,8 @@ const StructuredData = ({ type, data }) => {
 };
 
 StructuredData.propTypes = {
-    type: PropTypes.string.isRequired,
-    data: PropTypes.object
+  type: PropTypes.string.isRequired,
+  data: PropTypes.object,
 };
-
-
 
 export default StructuredData;
