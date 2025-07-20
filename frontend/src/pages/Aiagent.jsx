@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import SearchForm from "../components/ai/SearchForm";
-import PropertyCard from "../components/ai/PropertyCard";
+import PropertyPopup from "../components/ai/PropertyPopup";
 import CityPriceAnalysisDisplay from "../components/ai/LocationTrends";
 import PriceTrendDisplay from "../components/ai/PriceTrendDisplay";
 import CollapsibleCard from "../components/ai/CollapsibleCard";
@@ -35,6 +35,8 @@ const AIPropertyHub = () => {
   const [loadingStage, setLoadingStage] = useState("");
   const [loadingTime, setLoadingTime] = useState(0);
   const [isDeployedVersion, setIsDeployedVersion] = useState(false);
+  const [showPropertyPopup, setShowPropertyPopup] = useState(false);
+  const [aiAnalysis, setAiAnalysis] = useState("");
   const contentRef = useRef(null);
   const sliderRef = useRef(null);
 
@@ -85,11 +87,25 @@ const AIPropertyHub = () => {
     setLoadingTime(0);
     setProperties([]);
     setMarketArticles([]);
+    setAiAnalysis("");
+    setShowPropertyPopup(false);
 
     try {
       setLoadingStage("properties");
       const propertyResponse = await searchProperties(searchParams);
-      setProperties(propertyResponse.properties || []);
+
+      if (
+        propertyResponse.properties &&
+        propertyResponse.properties.length > 0
+      ) {
+        setProperties(propertyResponse.properties);
+        setAiAnalysis(propertyResponse.analysis || "");
+
+        // Show popup automatically when results are ready
+        setTimeout(() => {
+          setShowPropertyPopup(true);
+        }, 500);
+      }
 
       setLoadingStage("locations");
       const response = await getCityPriceAnalysis(searchParams.city);
@@ -322,21 +338,38 @@ const AIPropertyHub = () => {
           {searchPerformed && !isLoading && !searchError && (
             <div ref={contentRef} className="mt-8 sm:mt-12 w-full">
               <div className="flex flex-col gap-6 sm:gap-8 w-full">
-                {/* Property Results */}
+                {/* Property Results Button */}
                 {properties.length > 0 && (
-                  <CollapsibleCard
-                    title="Property Results"
-                    icon={Building}
-                    defaultOpen={true}
-                    className="w-full"
-                  >
-                    <ul className="space-y-4 w-full">
-                      {properties.map((property, index) => (
-                        <PropertyCard key={index} property={property} />
-                      ))}
-                    </ul>
-                  </CollapsibleCard>
+                  <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <Building className="w-6 h-6 text-orange-500" />
+                        <h3 className="text-xl font-semibold text-gray-800">
+                          Property Recommendations Ready
+                        </h3>
+                      </div>
+                      <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {properties.length} Properties Found
+                      </span>
+                    </div>
+
+                    <p className="text-gray-600 mb-4">
+                      AI has analyzed {properties.length} properties in{" "}
+                      {currentSearchParams?.city}
+                      {aiAnalysis && " and generated market insights"}. Click
+                      below to view detailed recommendations.
+                    </p>
+
+                    <button
+                      onClick={() => setShowPropertyPopup(true)}
+                      className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium flex items-center space-x-2"
+                    >
+                      <Building className="w-5 h-5" />
+                      <span>View Property Recommendations</span>
+                    </button>
+                  </div>
                 )}
+
                 {/* Market Insights */}
                 {marketArticles.length > 0 && (
                   <CollapsibleCard
@@ -354,6 +387,15 @@ const AIPropertyHub = () => {
             </div>
           )}
         </div>
+
+        {/* Property Popup */}
+        <PropertyPopup
+          isOpen={showPropertyPopup}
+          onClose={() => setShowPropertyPopup(false)}
+          properties={properties}
+          analysis={aiAnalysis}
+          city={currentSearchParams?.city}
+        />
       </main>
 
       {/* Carousel Arrows Styling */}

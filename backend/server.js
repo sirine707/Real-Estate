@@ -49,7 +49,9 @@ app.use(
       "http://localhost:4000",
       "http://localhost:5174",
       "http://localhost:5173",
+      "http://localhost:5175", // Added for new frontend port
       "http://127.0.0.1:5173", // Added for CORS support
+      "http://127.0.0.1:5175", // Added for new frontend port
       "https://EmiratEstate.vercel.app",
       "https://real-estate-website-admin.onrender.com",
       "https://real-estate-website-backend-zfu7.onrender.com",

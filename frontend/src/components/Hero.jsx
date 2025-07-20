@@ -84,7 +84,7 @@ const Hero = ({ onEmiratEstateGPTClick }) => {
               transition={{ duration: 0.5 }}
               className="p-1.5 rounded-lg"
             >
-              <Building className="w-8 h-8 text-white" />
+              
             </motion.div>
             <span className="text-3xl font-bold text-white">EmiratEstate</span>
           </Link>

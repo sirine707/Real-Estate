@@ -73,7 +73,11 @@ class FirecrawlService {
     try {
       const query = `Find real estate properties for sale in ${city}, UAE, priced under ${maxPrice.toLocaleString()} AED.`;
 
-      console.log(`[FirecrawlService] Searching for: ${query}`);
+      console.log(`🔥 [FirecrawlService] Starting property search...`);
+      console.log(`- City: ${city}`);
+      console.log(`- Max Price: ${maxPrice.toLocaleString()} AED`);
+      console.log(`- Limit: ${limit}`);
+      console.log(`- Query: ${query}`);
 
       const result = await this.firecrawl.search(query, {
         pageOptions: {
@@ -85,37 +89,47 @@ class FirecrawlService {
         },
       });
 
-      console.log(
-        "Search result from Firecrawl:",
-        JSON.stringify(result, null, 2)
-      );
+      console.log("🔥 [FirecrawlService] Raw search result:");
+      console.log("- Result exists:", !!result);
+      console.log("- Has data array:", Array.isArray(result?.data));
+      console.log("- Data length:", result?.data?.length || 0);
+      console.log("- Full result:", JSON.stringify(result, null, 2));
 
       if (!result || !Array.isArray(result.data)) {
         console.error(
-          "[FirecrawlService] No valid data returned from FireCrawl search."
+          "❌ [FirecrawlService] No valid data returned from FireCrawl search."
         );
         return [];
       }
 
+      console.log("🔍 [FirecrawlService] Processing search results...");
+
       const validUrls = result.data
         .filter((item) => {
+          console.log(`🔍 Processing item:`, {
+            url: item.url,
+            title: item.title,
+            hasDescription: !!item.description,
+            descriptionPreview: item.description?.substring(0, 100) + "...",
+          });
+
           if (
             !item.title ||
             item.title.includes("Oops") ||
-            item.title.includes("can’t seem to find")
+            item.title.includes("can't seem to find")
           ) {
             console.warn(
-              `[FirecrawlService] Skipping invalid page: ${item.url}`
+              `⚠️ [FirecrawlService] Skipping invalid page: ${item.url}`
             );
             return false;
           }
 
           if (
             !item.description ||
-            item.description.includes("can’t seem to find")
+            item.description.includes("can't seem to find")
           ) {
             console.warn(
-              `[FirecrawlService] Skipping page with invalid description: ${item.url}`
+              `⚠️ [FirecrawlService] Skipping page with invalid description: ${item.url}`
             );
             return false;
           }
@@ -128,7 +142,16 @@ class FirecrawlService {
             "/assets/",
           ];
 
-          return !badPatterns.some((pattern) => item.url.includes(pattern));
+          const hasBadPattern = badPatterns.some((pattern) =>
+            item.url.includes(pattern)
+          );
+          if (hasBadPattern) {
+            console.warn(
+              `⚠️ [FirecrawlService] Skipping URL with bad pattern: ${item.url}`
+            );
+          }
+
+          return !hasBadPattern;
         })
         .map((item) => ({
           url: item.url,
@@ -137,21 +160,21 @@ class FirecrawlService {
         }));
 
       console.log(
-        `[FirecrawlService] Found ${validUrls.length} valid property listing URLs:`
+        `✅ [FirecrawlService] Found ${validUrls.length} valid property listing URLs:`
       );
 
       // 🔥 OUTPUT THE URLS HERE 🔥
       validUrls.forEach((url, index) => {
         console.log(`[${index + 1}] ${url.url}`);
+        console.log(
+          `    Description: ${url.description?.substring(0, 150)}...`
+        );
       });
 
       return validUrls;
     } catch (error) {
-      console.error(
-        "[FirecrawlService] Error fetching property URLs:",
-        error.message
-      );
-      return [];
+      console.error("❌ [FirecrawlService] Error in findProperties:", error);
+      throw error;
     }
   }
 
@@ -281,7 +304,7 @@ class FirecrawlService {
             content: `Article content:\n\n"${pageContent.substring(0, 20000)}"`,
           },
         ],
-        model: "qwen-qwq-32b",
+        model: "qwen/qwen3-32b",
       });
 
       const summary = chatCompletion.choices[0]?.message?.content || "";

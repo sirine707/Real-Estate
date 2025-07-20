@@ -9,8 +9,11 @@ import {
 
 const router = express.Router();
 
-// Route to search for properties
+// Route to search for properties (POST)
 router.post("/properties/search", searchProperties);
+
+// Route to search for properties (GET) - for frontend compatibility
+router.get("/properties/search", searchProperties);
 
 // Route to get location trends - Path updated for clarity
 router.get("/locations/:city/price-analysis", getCityPriceAnalysis);
