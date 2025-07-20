@@ -18,10 +18,16 @@ import { AuthProvider } from "./context/AuthContext";
 import AIPropertyHub from "./pages/Aiagent";
 import StructuredData from "./components/SEO/StructuredData";
 import "react-toastify/dist/ReactToastify.css";
+import ChatbotIcon from "./components/ChatbotIcon";
+import ChatDialog from "./components/ChatDialog";
 
 export const Backendurl = import.meta.env.VITE_API_BASE_URL;
 
+import { useState } from "react";
+
 const App = () => {
+  const [showChat, setShowChat] = useState(false);
+  const handleChatIconClick = () => setShowChat((prev) => !prev);
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -49,6 +55,9 @@ const App = () => {
           </Routes>
           <Footer />
           <ToastContainer />
+          {/* Global Chat Icon - always visible on all pages */}
+          <ChatbotIcon onClick={handleChatIconClick} />
+          {showChat && <ChatDialog onClose={() => setShowChat(false)} />}
         </Router>
       </AuthProvider>
     </HelmetProvider>
