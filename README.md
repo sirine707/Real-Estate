@@ -129,7 +129,7 @@ Below are screenshots of the application (from `images/`):
 
 ### 👩‍💼 Admin Panel Screenshots
 
-Below are screenshots of the admin panel (from `images/`):
+Below are screenshots of the admin panel :
 
 <div align="center">
   <img src="images/admin_cap1.png" alt="Admin Screenshot 1" width="80%" />
@@ -246,8 +246,7 @@ BuildEstate offers a sophisticated property search system with multiple filterin
 ### AI-Powered Market Analysis
 
 <div align="center">
-  <img src="https://github.com/AAYUSH412/Real-Estate-Website/blob/main/home-regular-24.png?raw=true" width="0" height="0" alt="BuildEstate">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=AAYUSH412&theme=react-dark&hide_border=true&area=true" width="85%">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=sirine707&theme=react-dark&hide_border=true&area=true" width="85%">
 </div>
 
 The platform provides valuable insights using multiple AI models:
@@ -307,16 +306,12 @@ BuildEstate includes a newsletter system for property updates and market trends:
 
 ### AI Feature Limitations
 
-- **AI Analysis Not Working**: Verify API keys for Azure and FirecrawlJS
+- **AI Analysis Not Working**: Verify API keys for LLM Provider you are using and FirecrawlJS
 - **Empty Recommendations**: The system needs at least 10 properties in database for meaningful recommendations
 
-For additional help, [open an issue](https://github.com/AAYUSH412/Real-Estate-Website/issues/new) with detailed error information.
+For additional help, [open an issue](https://github.com/sirine707/Real-Estate/issues/new) with detailed error information.
 
 </details>
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/trinib/trinib/snake/github-contribution-grid-snake-dark.svg" width="100%" alt="Contribution Snake Animation">
-</div>
 
 ## 🤝 Contributing
 
